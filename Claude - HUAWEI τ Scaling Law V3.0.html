@@ -3,721 +3,987 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>华为韬（τ）定律 · 知识库 </title>
+<title>华为韬（τ）定律 · 深度知识库 v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{
-  --ink:#0a0a0f;--paper:#f5f2ec;--accent:#c8000a;--accent2:#e8750a;
-  --accent3:#1a5fa8;--gold:#b8860b;--muted:#6b6560;--border:#d4cfc8;
-  --code-bg:#1a1a24;--code-text:#e8dcc8;--surface:#ede9e0;
-  --highlight:rgba(200,0,10,.07);--green:#2a8a2a;--purple:#7a1fa8;
+:root {
+  --ink: #0c0c14;
+  --paper: #f6f3ee;
+  --accent: #c8000a;
+  --accent2: #b06b00;
+  --accent3: #1b4f8a;
+  --accent4: #1a7a3e;
+  --muted: #6a6560;
+  --border: #d8d3cb;
+  --surface: #eeeae0;
+  --code-bg: #161620;
+  --code-text: #e0d8c8;
+  --highlight: rgba(200,0,10,0.06);
+  --gold: #9a7200;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Noto Serif SC','Songti SC',serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.9;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Serif SC','Songti SC',serif;background:var(--paper);color:var(--ink);font-size:15.5px;line-height:1.95;overflow-x:hidden;}
 
-/* EDIT TOOLBAR */
-#edit-toolbar{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--ink);color:#fff;height:48px;display:flex;align-items:center;padding:0 24px;gap:16px;font-family:'Noto Sans SC',sans-serif;font-size:13px;transform:translateY(-100%);transition:transform .3s;box-shadow:0 2px 20px rgba(0,0,0,.4)}
-#edit-toolbar.visible{transform:translateY(0)}
-#edit-toolbar .elabel{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--accent2);letter-spacing:.05em}
-#edit-toolbar .elabel::before{content:'✏️';font-size:15px}
-#edit-toolbar .esep{flex:1}
-#edit-toolbar button{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 14px;border-radius:4px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;font-size:12px;transition:all .2s}
-#edit-toolbar button:hover{background:rgba(255,255,255,.1);border-color:#fff}
-#edit-toolbar .btn-save{border-color:#4caf50;color:#4caf50}
-#edit-toolbar .btn-save:hover{background:rgba(76,175,80,.15)}
-#edit-toolbar .btn-export{border-color:var(--accent2);color:var(--accent2)}
-#edit-toolbar .btn-export:hover{background:rgba(232,117,10,.15)}
-#edit-toolbar .ehint{color:rgba(255,255,255,.4);font-size:11px}
+/* ───── EDIT MODE ───── */
+#edit-toolbar{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--ink);color:#fff;height:50px;display:flex;align-items:center;padding:0 24px;gap:14px;font-family:'Noto Sans SC',sans-serif;font-size:12.5px;transform:translateY(-100%);transition:transform .3s ease;box-shadow:0 2px 24px rgba(0,0,0,.45);}
+#edit-toolbar.visible{transform:translateY(0);}
+#edit-toolbar .el{display:flex;align-items:center;gap:8px;font-weight:700;color:#f0a040;letter-spacing:.04em;}
+#edit-toolbar .sep{flex:1;}
+#edit-toolbar button{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;padding:5px 14px;border-radius:4px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;font-size:11.5px;transition:all .2s;}
+#edit-toolbar button:hover{background:rgba(255,255,255,.1);}
+#edit-toolbar .bs{border-color:#4caf50;color:#4caf50;}
+#edit-toolbar .be{border-color:#f0a040;color:#f0a040;}
+#edit-toggle-btn{position:fixed;top:16px;right:20px;z-index:10000;background:var(--ink);color:#fff;border:none;padding:8px 18px;border-radius:24px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:7px;box-shadow:0 3px 18px rgba(0,0,0,.3);transition:all .25s;user-select:none;}
+#edit-toggle-btn:hover{transform:translateY(-1px);box-shadow:0 5px 22px rgba(0,0,0,.35);}
+#edit-toggle-btn.active{background:#b06b00;}
+#edit-toggle-btn .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .25s;}
+#edit-toggle-btn.active .dot{background:#fff;}
+body.edit-mode [contenteditable="true"]{border:2px dashed #f0a040;background:rgba(240,160,0,.07);border-radius:3px;padding:2px 5px;outline:none;cursor:text;transition:background .2s;display:inline-block;min-width:10px;}
+body.edit-mode [contenteditable="true"]:hover{background:rgba(240,160,0,.13);}
+body.edit-mode [contenteditable="true"]:focus{background:rgba(240,160,0,.1);border-color:#c08000;box-shadow:0 0 0 3px rgba(240,160,0,.18);}
+body.edit-mode [contenteditable="true"].bk{display:block;}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a26;color:#fff;padding:10px 26px;border-radius:8px;font-family:'Noto Sans SC',sans-serif;font-size:13px;z-index:99999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
 
-/* EDIT TOGGLE */
-#edit-toggle-btn{position:fixed;top:16px;right:20px;z-index:10000;background:var(--ink);color:#fff;border:none;padding:8px 18px;border-radius:24px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:6px;box-shadow:0 3px 16px rgba(0,0,0,.3);transition:all .25s;user-select:none}
-#edit-toggle-btn:hover{background:#222235;transform:translateY(-1px)}
-#edit-toggle-btn.active{background:var(--accent2)}
-#edit-toggle-btn .tdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .25s}
-#edit-toggle-btn.active .tdot{background:#fff}
+/* ───── HERO ───── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;overflow:hidden;background:var(--ink);}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 38%,rgba(200,0,10,.16) 0%,transparent 70%),radial-gradient(ellipse 35% 35% at 15% 85%,rgba(27,79,138,.13) 0%,transparent 60%),radial-gradient(ellipse 25% 25% at 85% 20%,rgba(176,107,0,.1) 0%,transparent 55%);}
+.hero-tau-bg{position:absolute;font-size:clamp(200px,32vw,520px);font-family:'EB Garamond',serif;font-style:italic;font-weight:400;color:rgba(255,255,255,.022);line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(200,0,10,.18);border:1px solid rgba(200,0,10,.38);color:#ff7070;padding:5px 18px;border-radius:20px;font-size:11px;font-family:'Noto Sans SC',sans-serif;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;position:relative;}
+.hero h1{font-size:clamp(34px,5.5vw,72px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:14px;letter-spacing:-.02em;}
+.hero h1 .t{color:var(--accent);font-style:italic;}
+.hero .sub{font-size:clamp(13px,1.8vw,18px);color:rgba(255,255,255,.5);font-family:'Noto Sans SC',sans-serif;font-weight:300;max-width:620px;margin:0 auto 48px;line-height:1.65;}
+.hero-meta{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;position:relative;}
+.hero-stat .num{font-size:clamp(26px,3.8vw,42px);font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;line-height:1;}
+.hero-stat .num span{color:var(--accent);}
+.hero-stat .lb{font-size:10.5px;color:rgba(255,255,255,.38);font-family:'Noto Sans SC',sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-top:5px;}
+.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.28);font-size:11px;font-family:'Noto Sans SC',sans-serif;letter-spacing:.15em;display:flex;flex-direction:column;align-items:center;gap:6px;animation:bounce 2s ease-in-out infinite;}
+.scroll-hint::after{content:'↓';font-size:17px;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(7px);}}
 
-/* EDIT MODE */
-body.edit-mode [contenteditable="true"]{border:2px dashed var(--accent2);background:rgba(232,117,10,.06);border-radius:3px;padding:2px 4px;outline:none;cursor:text;transition:background .2s;min-width:20px}
-body.edit-mode [contenteditable="true"]:hover{background:rgba(232,117,10,.12);border-color:var(--accent2)}
-body.edit-mode [contenteditable="true"]:focus{background:rgba(232,117,10,.1);box-shadow:0 0 0 3px rgba(232,117,10,.2)}
+/* ───── NAV ───── */
+.toc-nav{position:sticky;top:0;z-index:800;background:rgba(246,243,238,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.toc-list{display:flex;gap:0;list-style:none;overflow-x:auto;white-space:nowrap;padding:0 32px;}
+.toc-list::-webkit-scrollbar{display:none;}
+.toc-list a{display:block;padding:13px 16px;font-family:'Noto Sans SC',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:.05em;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s;}
+.toc-list a:hover,.toc-list a.active{color:var(--accent);border-bottom-color:var(--accent);}
 
-/* TOAST */
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#222;color:#fff;padding:10px 24px;border-radius:8px;font-family:'Noto Sans SC',sans-serif;font-size:13px;z-index:99999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
-#toast.show{transform:translateX(-50%) translateY(0)}
+/* ───── LAYOUT ───── */
+.pw{max-width:1120px;margin:0 auto;padding:0 40px;}
+.section{padding:80px 0;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.sh{display:flex;align-items:baseline;gap:16px;margin-bottom:44px;}
+.sn{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;min-width:36px;}
+.st{font-size:clamp(22px,3.2vw,36px);font-weight:700;line-height:1.2;letter-spacing:-.01em;}
+.st em{color:var(--accent);font-style:normal;}
 
-/* HERO */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;overflow:hidden;background:var(--ink)}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(200,0,10,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(26,95,168,.12) 0%,transparent 60%)}
-.hero-tau-bg{position:absolute;font-size:clamp(200px,30vw,480px);font-family:'JetBrains Mono',monospace;font-weight:300;color:rgba(255,255,255,.025);line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(200,0,10,.2);border:1px solid rgba(200,0,10,.4);color:#ff6666;padding:5px 16px;border-radius:20px;font-size:11px;font-family:'Noto Sans SC',sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px;position:relative}
-.hero-badge::before{content:'▸'}
-.hero h1{font-size:clamp(32px,6vw,80px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:16px;letter-spacing:-.02em}
-.hero h1 .tau{color:var(--accent);font-style:italic}
-.hero .subtitle{font-size:clamp(13px,2vw,18px);color:rgba(255,255,255,.5);font-family:'Noto Sans SC',sans-serif;font-weight:300;max-width:680px;margin:0 auto 48px;line-height:1.7}
-.hero-meta{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;position:relative}
-.hero-stat .num{font-size:clamp(26px,4vw,42px);font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;line-height:1}
-.hero-stat .num span{color:var(--accent)}
-.hero-stat .label{font-size:11px;color:rgba(255,255,255,.4);font-family:'Noto Sans SC',sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
-.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.3);font-size:12px;font-family:'Noto Sans SC',sans-serif;letter-spacing:.15em;display:flex;flex-direction:column;align-items:center;gap:8px;animation:bounce 2s ease-in-out infinite}
-.scroll-hint::after{content:'↓';font-size:18px}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+/* ───── PROSE ───── */
+.prose p{font-size:14.8px;line-height:2.05;margin-bottom:18px;color:#252018;}
+.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--ink);}
+.prose em{color:var(--accent);font-style:normal;font-weight:600;}
 
-/* NAV */
-.toc-nav{position:sticky;top:0;z-index:800;background:rgba(245,242,236,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 40px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.toc-list{display:flex;gap:0;list-style:none;white-space:nowrap}
-.toc-list a{display:block;padding:12px 18px;font-family:'Noto Sans SC',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:.05em;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s}
-.toc-list a:hover,.toc-list a.active{color:var(--accent);border-bottom-color:var(--accent)}
+/* ───── CARDS ───── */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin:28px 0;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:26px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--cc,var(--accent));}
+.card-ic{font-size:26px;margin-bottom:10px;display:block;}
+.card h3{font-size:14.5px;font-weight:700;margin-bottom:7px;font-family:'Noto Sans SC',sans-serif;}
+.card p{font-size:13px;color:var(--muted);line-height:1.85;font-family:'Noto Sans SC',sans-serif;}
+.card .tag{display:inline-block;background:rgba(0,0,0,.05);border:1px solid var(--border);font-size:10px;padding:1px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;margin:4px 3px 0 0;color:var(--muted);}
 
-/* LAYOUT */
-.pw{max-width:1120px;margin:0 auto;padding:0 40px}
+/* ───── FORMULA ───── */
+.fb{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:30px 36px;margin:28px 0;font-family:'JetBrains Mono',monospace;position:relative;overflow:hidden;}
+.fb::before{content:'FORMULA';position:absolute;top:12px;right:16px;font-size:9.5px;letter-spacing:.15em;color:rgba(255,255,255,.18);}
+.fm{font-size:clamp(16px,2.5vw,24px);color:#fff;text-align:center;line-height:2.2;margin-bottom:16px;}
+.fv{color:#ffb06c;}.fo{color:#7ecece;}.fi{color:#a0c8a0;}
+.fd{font-size:11.5px;color:rgba(255,255,255,.48);text-align:center;line-height:1.9;}
+.fd span{color:rgba(255,255,255,.75);}
 
-/* SECTIONS */
-.section{padding:80px 0;border-bottom:1px solid var(--border)}
-.section:last-child{border-bottom:none}
-.sh{display:flex;align-items:baseline;gap:16px;margin-bottom:48px}
-.snum{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;min-width:40px}
-.stitle{font-size:clamp(22px,3.5vw,36px);font-weight:700;line-height:1.2;letter-spacing:-.01em}
-.stitle em{color:var(--accent);font-style:normal}
+/* ───── COMPARE TABLE ───── */
+.ct{width:100%;border-collapse:collapse;margin:28px 0;font-family:'Noto Sans SC',sans-serif;font-size:13.5px;}
+.ct th{background:var(--ink);color:#fff;padding:13px 18px;text-align:left;font-weight:600;letter-spacing:.04em;font-size:11.5px;}
+.ct th:last-child{color:#f0a040;}
+.ct td{padding:13px 18px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.75;}
+.ct tr:last-child td{border-bottom:none;}
+.ct tr:nth-child(even) td{background:var(--surface);}
+.ct td:first-child{font-weight:600;color:var(--muted);white-space:nowrap;}
+.ct .ny{color:var(--accent);font-weight:500;}
+.ct .od{color:var(--muted);}
+.ct .na{color:var(--accent4);font-weight:500;}
 
-/* CARDS */
-.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:32px 0}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--cc,var(--accent))}
-.card-icon{font-size:26px;margin-bottom:12px;display:block}
-.card h3{font-size:14.5px;font-weight:700;margin-bottom:8px;font-family:'Noto Sans SC',sans-serif}
-.card p{font-size:13px;color:var(--muted);line-height:1.85;font-family:'Noto Sans SC',sans-serif}
+/* ───── METRICS ───── */
+.mr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:28px 0;}
+.mb{background:var(--ink);color:#fff;border-radius:8px;padding:22px 18px;text-align:center;}
+.mb .v{font-size:clamp(22px,3.5vw,36px);font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;color:var(--accent);}
+.mb .v .u{font-size:.52em;color:rgba(255,255,255,.45);font-weight:400;}
+.mb .l{font-size:10.5px;color:rgba(255,255,255,.38);font-family:'Noto Sans SC',sans-serif;letter-spacing:.07em;margin-top:7px;line-height:1.5;}
 
-/* FORMULA */
-.formula-box{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:28px 36px;margin:28px 0;font-family:'JetBrains Mono',monospace;position:relative;overflow:hidden}
-.formula-box::before{content:'FORMULA';position:absolute;top:10px;right:14px;font-size:10px;letter-spacing:.15em;color:rgba(255,255,255,.2)}
-.fm{font-size:clamp(16px,2.5vw,26px);color:#fff;text-align:center;line-height:2.2;margin-bottom:16px}
-.fv{color:#ff9a6c}.fo{color:#7ec8c8}
-.fd{font-size:12px;color:rgba(255,255,255,.5);text-align:center;line-height:1.8}
-.fd span{color:rgba(255,255,255,.75)}
+/* ───── QUOTE ───── */
+.qb{border-left:4px solid var(--accent);background:var(--highlight);padding:22px 30px;margin:28px 0;border-radius:0 6px 6px 0;}
+.qb blockquote{font-size:15px;line-height:1.95;font-style:italic;color:var(--ink);margin-bottom:10px;font-family:'EB Garamond',serif;}
+.qb cite{font-size:11.5px;color:var(--muted);font-style:normal;font-family:'Noto Sans SC',sans-serif;display:flex;align-items:center;gap:8px;}
+.qb cite::before{content:'—';}
 
-/* TABLES */
-.ctable{width:100%;border-collapse:collapse;margin:28px 0;font-family:'Noto Sans SC',sans-serif;font-size:13.5px}
-.ctable th{background:var(--ink);color:#fff;padding:13px 18px;text-align:left;font-weight:600;letter-spacing:.05em;font-size:11.5px}
-.ctable th:first-child{border-radius:6px 0 0 0}
-.ctable th:last-child{border-radius:0 6px 0 0}
-.ctable td{padding:13px 18px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.75}
-.ctable tr:last-child td{border-bottom:none}
-.ctable tr:nth-child(even) td{background:var(--surface)}
-.ctable td:first-child{font-weight:600;color:var(--muted);white-space:nowrap}
-.new{color:var(--accent);font-weight:500}.old{color:var(--muted)}
+/* ───── PEER EVALUATION ───── */
+.peer-grid{display:grid;gap:16px;margin:28px 0;}
+.peer-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:22px 26px;position:relative;}
+.peer-item::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--pc,var(--accent3));border-radius:4px 0 0 4px;}
+.peer-header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.peer-logo{width:44px;height:44px;border-radius:8px;background:var(--pl,#1a5fa8);display:flex;align-items:center;justify-content:center;font-weight:900;font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff;flex-shrink:0;}
+.peer-title h4{font-size:15px;font-weight:700;font-family:'Noto Sans SC',sans-serif;}
+.peer-title p{font-size:11px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;}
+.peer-item blockquote{font-size:14px;line-height:1.9;color:var(--ink);font-style:italic;font-family:'EB Garamond',serif;margin-bottom:10px;}
+.peer-item .analysis{font-size:12.5px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.85;}
 
-/* TIMELINE */
-.timeline{position:relative;margin:36px 0;padding-left:40px}
-.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent3))}
-.tl-item{position:relative;margin-bottom:32px}
-.tl-item::before{content:'';position:absolute;left:-34px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--paper);box-shadow:0 0 0 2px var(--accent)}
-.tl-year{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.08em;margin-bottom:4px}
-.tl-title{font-size:15px;font-weight:700;margin-bottom:6px;font-family:'Noto Sans SC',sans-serif}
-.tl-desc{font-size:13px;color:var(--muted);line-height:1.85;font-family:'Noto Sans SC',sans-serif}
+/* ───── SUPPLY CHAIN ───── */
+.sc-flow{display:grid;gap:0;margin:28px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.sc-tier{padding:22px 24px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:start;}
+.sc-tier:last-child{border-bottom:none;}
+.sc-tier-name{font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:700;color:var(--accent);padding-top:2px;}
+.sc-content h4{font-size:14px;font-weight:700;font-family:'Noto Sans SC',sans-serif;margin-bottom:6px;}
+.sc-content p{font-size:12.5px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.85;}
+.sc-content .cos{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.co-tag{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-size:11px;font-family:'Noto Sans SC',sans-serif;color:var(--ink);}
+.co-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--cd,var(--accent));}
 
-/* METRICS */
-.mr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:28px 0}
-.mb{background:var(--ink);color:#fff;border-radius:8px;padding:22px 18px;text-align:center}
-.mb .val{font-size:clamp(22px,3.5vw,36px);font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;color:var(--accent)}
-.mb .val .unit{font-size:.52em;color:rgba(255,255,255,.45);font-weight:400}
-.mb .label{font-size:11px;color:rgba(255,255,255,.4);font-family:'Noto Sans SC',sans-serif;letter-spacing:.07em;margin-top:8px;line-height:1.5}
+/* ───── PACKAGING PRINCIPLE ───── */
+.pkg-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0;}
+.pkg-box{border:1px solid var(--border);border-radius:8px;padding:22px;position:relative;}
+.pkg-box h4{font-size:14px;font-weight:700;font-family:'Noto Sans SC',sans-serif;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.pkg-box ul{list-style:none;font-family:'Noto Sans SC',sans-serif;font-size:12.5px;color:var(--muted);line-height:2.1;}
+.pkg-box ul li::before{content:'→  ';color:var(--accent);}
+.pkg-box.highlight{background:var(--ink);border-color:var(--accent);}
+.pkg-box.highlight h4{color:#fff;border-color:rgba(255,255,255,.15);}
+.pkg-box.highlight ul{color:rgba(255,255,255,.6);}
+.pkg-box .badge{display:inline-block;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:3px;font-family:'JetBrains Mono',monospace;margin-bottom:8px;letter-spacing:.06em;}
+@media(max-width:640px){.pkg-compare{grid-template-columns:1fr;}}
 
-/* QUOTE */
-.qb{border-left:4px solid var(--accent);background:var(--highlight);padding:22px 28px;margin:28px 0;border-radius:0 6px 6px 0}
-.qb blockquote{font-size:15px;line-height:1.95;font-style:italic;color:var(--ink);margin-bottom:10px}
-.qb cite{font-size:12px;color:var(--muted);font-style:normal;font-family:'Noto Sans SC',sans-serif;display:flex;align-items:center;gap:8px}
-.qb cite::before{content:'—'}
+/* ───── THERMAL ───── */
+.thermal-box{background:#fff5e8;border:1px solid #f0d0a0;border-radius:8px;padding:24px 28px;margin:22px 0;}
+.thermal-box h4{font-size:14px;font-weight:700;font-family:'Noto Sans SC',sans-serif;color:#8a4400;margin-bottom:10px;}
+.thermal-box p{font-size:13px;font-family:'Noto Sans SC',sans-serif;color:#6a3800;line-height:1.9;}
 
-/* INDUSTRY VOICE */
-.voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:28px 0}
-.voice-card{border:1px solid var(--border);border-radius:8px;padding:24px;background:var(--surface);position:relative}
-.voice-card .who{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.voice-card .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--ink);color:#fff;flex-shrink:0}
-.voice-card .who-info .name{font-size:14px;font-weight:700;font-family:'Noto Sans SC',sans-serif}
-.voice-card .who-info .title{font-size:11px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;margin-top:2px}
-.voice-card blockquote{font-size:13px;line-height:1.9;color:var(--ink);font-style:italic}
-.voice-card .stance{display:inline-block;font-size:10px;font-family:'Noto Sans SC',sans-serif;font-weight:700;padding:2px 8px;border-radius:3px;margin-top:10px;letter-spacing:.05em;text-transform:uppercase}
-.stance-positive{background:rgba(42,138,42,.12);color:var(--green)}
-.stance-neutral{background:rgba(26,95,168,.12);color:var(--accent3)}
-.stance-cautious{background:rgba(200,0,10,.1);color:var(--accent)}
-.stance-skeptical{background:rgba(107,101,96,.12);color:var(--muted)}
+/* ───── TIMELINE ───── */
+.tl{position:relative;margin:36px 0;padding-left:40px;}
+.tl::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent3));}
+.tl-item{position:relative;margin-bottom:32px;}
+.tl-item::before{content:'';position:absolute;left:-34px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--paper);box-shadow:0 0 0 2px var(--accent);}
+.tl-year{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.07em;margin-bottom:3px;}
+.tl-title{font-size:15.5px;font-weight:700;margin-bottom:5px;font-family:'Noto Sans SC',sans-serif;}
+.tl-desc{font-size:13px;color:var(--muted);line-height:1.85;font-family:'Noto Sans SC',sans-serif;}
 
-/* ROADMAP */
-.roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:28px 0}
-.rp{padding:22px 18px;border-right:1px solid var(--border)}
-.rp:last-child{border-right:none}
-.rp .ry{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;margin-bottom:8px}
-.rp h4{font-size:13px;font-weight:700;font-family:'Noto Sans SC',sans-serif;margin-bottom:10px}
-.rp ul{list-style:none;font-size:12px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:2}
-.rp ul li::before{content:'· ';color:var(--accent)}
-.rp.hl{background:var(--ink);color:#fff}
-.rp.hl .ry{color:var(--accent2)}
-.rp.hl h4,.rp.hl ul{color:rgba(255,255,255,.8)}
+/* ───── ROADMAP ───── */
+.rm{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:28px 0;}
+.rm-ph{padding:22px 18px;border-right:1px solid var(--border);}
+.rm-ph:last-child{border-right:none;}
+.rm-ph .py{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--accent);letter-spacing:.09em;margin-bottom:7px;}
+.rm-ph h4{font-size:13.5px;font-weight:700;font-family:'Noto Sans SC',sans-serif;margin-bottom:9px;}
+.rm-ph ul{list-style:none;font-size:11.5px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:2.1;}
+.rm-ph ul li::before{content:'·  ';color:var(--accent);}
+.rm-ph.hl{background:var(--ink);color:#fff;}
+.rm-ph.hl .py{color:#f0a040;}
+.rm-ph.hl h4{color:#fff;}
+.rm-ph.hl ul{color:rgba(255,255,255,.55);}
 
-/* RISK */
-.risk-grid{display:grid;gap:16px;margin:28px 0}
-.ri{display:grid;grid-template-columns:24px 1fr 1fr;gap:16px;padding:20px;background:var(--surface);border-radius:6px;border:1px solid var(--border);align-items:start;font-family:'Noto Sans SC',sans-serif}
-.rl{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;margin-top:3px}
-.rl.h{background:#c8000a}.rl.m{background:#e8750a}.rl.l{background:#1a5fa8}
-.ri h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.ri p{font-size:12.5px;color:var(--muted);line-height:1.75}
-.ri .mit h5{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
-.ri .mit p{font-size:12px;color:var(--muted);line-height:1.75}
+/* ───── RISK ───── */
+.rg{display:grid;gap:14px;margin:28px 0;}
+.ri{display:grid;grid-template-columns:26px 1fr 1fr;gap:15px;padding:18px 20px;background:var(--surface);border-radius:6px;border:1px solid var(--border);align-items:start;font-family:'Noto Sans SC',sans-serif;}
+.rl{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;margin-top:3px;flex-shrink:0;}
+.rl.H{background:#c8000a;}.rl.M{background:#b06b00;}.rl.L{background:#1b4f8a;}
+.ri h4{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.ri p{font-size:12px;color:var(--muted);line-height:1.8;}
+.ri .mt h5{font-size:10.5px;font-weight:700;color:#2a7a2a;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px;}
+@media(max-width:640px){.ri{grid-template-columns:22px 1fr;}.ri .mt{grid-column:2;}}
 
-/* FIN TABLE */
-.ft{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px;margin:20px 0}
-.ft th{background:var(--ink);color:#fff;padding:11px 14px;text-align:right;font-size:11px;letter-spacing:.06em;font-family:'Noto Sans SC',sans-serif}
-.ft th:first-child{text-align:left}
-.ft td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--border)}
-.ft td:first-child{text-align:left;font-family:'Noto Sans SC',sans-serif;font-size:12.5px;font-weight:500}
-.ft tr.sub td{font-weight:700;background:var(--surface);border-top:2px solid var(--border)}
-.ft tr.tot td{font-weight:900;background:var(--ink);color:#fff;border-top:3px solid var(--accent)}
-.ft .pos{color:#2a8a2a}.ft .neg{color:var(--accent)}.ft .ac{color:var(--accent)}
+/* ───── MEDIA EVAL ───── */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:28px 0;}
+.media-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:22px;}
+.media-card .source{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.media-card .stance{display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;font-family:'Noto Sans SC',sans-serif;font-weight:700;margin-bottom:10px;}
+.stance-neutral{background:#e8e8f0;color:#5050a0;}
+.stance-positive{background:#e0f0e4;color:#1a6a2a;}
+.stance-skeptical{background:#f8e8e0;color:#8a3000;}
+.media-card p{font-size:12.5px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.85;}
 
-/* PROSE */
-.prose{max-width:800px}
-.prose p{font-size:15px;line-height:2;margin-bottom:20px;color:#2a2520}
-.prose p:last-child{margin-bottom:0}
-.prose strong{color:var(--ink);font-weight:700}
-.prose em{color:var(--accent);font-style:normal;font-weight:600}
+/* ───── FINANCE ───── */
+.ft{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px;margin:20px 0;}
+.ft th{background:var(--ink);color:#fff;padding:11px 15px;text-align:right;font-size:11px;letter-spacing:.05em;font-family:'Noto Sans SC',sans-serif;}
+.ft th:first-child{text-align:left;}
+.ft td{padding:10px 15px;text-align:right;border-bottom:1px solid var(--border);}
+.ft td:first-child{text-align:left;font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:500;}
+.ft tr.sub td{font-weight:700;background:var(--surface);border-top:2px solid var(--border);}
+.ft tr.tot td{font-weight:900;background:var(--ink);color:#fff;border-top:3px solid var(--accent);}
+.ft .pos{color:#1a7a2a;}.ft .neg{color:var(--accent);}.ft .ac{color:var(--accent);}
 
-/* ANALOGY */
-.ab{border:1px solid var(--border);border-radius:8px;padding:26px 30px;margin:28px 0;position:relative;background:linear-gradient(135deg,var(--surface) 0%,var(--paper) 100%)}
-.ab::before{content:'类比';position:absolute;top:-10px;left:20px;background:var(--accent);color:#fff;font-size:10px;font-family:'Noto Sans SC',sans-serif;font-weight:700;padding:2px 10px;border-radius:3px;letter-spacing:.08em}
-.ab p{font-size:14px;line-height:2;color:var(--muted);font-family:'Noto Sans SC',sans-serif}
-.ab p strong{color:var(--ink)}
+/* ───── APPENDIX ───── */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:20px 0;}
+.gl-item{padding:16px 20px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
+.gl-item:nth-child(even){border-right:none;}
+.gl-term{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;}
+.gl-def{font-size:12px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.8;}
 
-/* LEVEL SYSTEM */
-.level-system{display:grid;gap:14px;margin:28px 0}
-.lr{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:18px}
-.lname{font-family:'Noto Sans SC',sans-serif;font-size:12.5px;font-weight:700;color:var(--accent);text-align:right;white-space:nowrap}
-.lbw{background:var(--surface);border-radius:4px;border:1px solid var(--border);padding:14px 18px}
-.lbw h4{font-size:14px;font-family:'Noto Sans SC',sans-serif;font-weight:700;margin-bottom:4px}
-.lbw p{font-size:12.5px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.75}
-.tag{display:inline-block;background:rgba(200,0,10,.1);color:var(--accent);border:1px solid rgba(200,0,10,.2);font-size:10px;padding:2px 7px;border-radius:3px;font-family:'JetBrains Mono',monospace;margin:4px 3px 0 0}
+/* ───── ANALOGY ───── */
+.an-box{border:1px solid var(--border);border-radius:8px;padding:26px 30px;margin:26px 0;position:relative;background:linear-gradient(135deg,var(--surface) 0%,var(--paper) 100%);}
+.an-box::before{content:'类比';position:absolute;top:-10px;left:20px;background:var(--accent);color:#fff;font-size:10px;font-family:'Noto Sans SC',sans-serif;font-weight:700;padding:2px 10px;border-radius:3px;letter-spacing:.07em;}
+.an-box p{font-size:13.5px;line-height:2;color:var(--muted);font-family:'Noto Sans SC',sans-serif;}
+.an-box p strong{color:var(--ink);}
 
-/* APPENDIX */
-.appx{background:var(--ink);color:rgba(255,255,255,.85);padding:60px 0}
-.appx-inner{max-width:1120px;margin:0 auto;padding:0 40px}
-.appx h2{color:#fff;font-size:28px;font-weight:700;margin-bottom:12px}
-.appx .intro{font-family:'Noto Sans SC',sans-serif;font-size:14px;color:rgba(255,255,255,.5);margin-bottom:40px;line-height:1.8}
-.term-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-.term{border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:18px 20px}
-.term dt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent2);margin-bottom:6px}
-.term dd{font-family:'Noto Sans SC',sans-serif;font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.85}
+/* ───── REF ───── */
+.ref-list{list-style:none;margin:16px 0;font-family:'Noto Sans SC',sans-serif;font-size:12.5px;color:var(--muted);counter-reset:ref;}
+.ref-list li{counter-increment:ref;padding:8px 0 8px 32px;position:relative;border-bottom:1px solid var(--border);line-height:1.75;}
+.ref-list li:last-child{border-bottom:none;}
+.ref-list li::before{content:counter(ref)'.';position:absolute;left:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;}
+.ref-list a{color:var(--accent3);text-decoration:none;}
+.ref-list a:hover{text-decoration:underline;}
 
-/* REFERENCES */
-.ref-list{list-style:none;font-family:'Noto Sans SC',sans-serif;font-size:13px;line-height:2;counter-reset:ref}
-.ref-list li{counter-increment:ref;display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
-.ref-list li:last-child{border-bottom:none}
-.ref-list li::before{content:counter(ref);min-width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;flex-shrink:0;margin-top:6px}
-.ref-list li a{color:var(--accent3);text-decoration:none}
-.ref-list li a:hover{text-decoration:underline}
+/* ───── FOOTER ───── */
+.footer{background:var(--ink);color:rgba(255,255,255,.38);text-align:center;padding:48px 40px;font-size:11.5px;font-family:'Noto Sans SC',sans-serif;line-height:2;}
+.footer a{color:rgba(200,0,10,.7);text-decoration:none;}
 
-/* INFOBOX */
-.infobox{border:2px solid var(--accent3);border-radius:8px;padding:22px 26px;margin:24px 0;background:rgba(26,95,168,.05)}
-.infobox h4{font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:700;color:var(--accent3);margin-bottom:10px;letter-spacing:.03em}
-.infobox p,.infobox li{font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--muted);line-height:1.85}
-.infobox ul{list-style:none;padding:0}
-.infobox ul li::before{content:'◆ ';color:var(--accent3);font-size:9px}
-
-/* MEDIA BOX */
-.media-eval{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:28px 0}
-.me-card{border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.me-card .me-header{background:var(--ink);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px}
-.me-card .me-logo{font-size:20px}
-.me-card .me-outlet{font-size:13px;font-weight:700;font-family:'Noto Sans SC',sans-serif}
-.me-card .me-type{font-size:10px;color:rgba(255,255,255,.4);font-family:'Noto Sans SC',sans-serif;letter-spacing:.08em;text-transform:uppercase}
-.me-card .me-body{padding:16px 18px}
-.me-card .me-body p{font-size:13px;line-height:1.85;color:var(--muted);font-family:'Noto Sans SC',sans-serif}
-.me-card .me-date{font-size:11px;color:rgba(0,0,0,.35);font-family:'JetBrains Mono',monospace;margin-top:10px}
-
-/* SUPPLY CHAIN */
-.sc-map{display:grid;grid-template-columns:1fr 2fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:28px 0}
-.sc-col{padding:0}
-.sc-col-header{background:var(--ink);color:#fff;padding:12px 18px;text-align:center;font-size:12px;font-weight:700;font-family:'Noto Sans SC',sans-serif;letter-spacing:.05em}
-.sc-items{padding:16px}
-.sc-item{padding:10px 14px;background:var(--surface);border-radius:5px;border:1px solid var(--border);margin-bottom:10px;font-family:'Noto Sans SC',sans-serif}
-.sc-item:last-child{margin-bottom:0}
-.sc-item .sc-name{font-size:13px;font-weight:700;margin-bottom:3px}
-.sc-item .sc-desc{font-size:11.5px;color:var(--muted);line-height:1.7}
-.sc-item .sc-impact{font-size:10.5px;font-family:'JetBrains Mono',monospace;margin-top:5px;padding:3px 6px;border-radius:3px;display:inline-block}
-.impact-up{background:rgba(42,138,42,.12);color:var(--green)}
-.impact-neutral{background:rgba(26,95,168,.1);color:var(--accent3)}
-.impact-watch{background:rgba(232,117,10,.1);color:var(--accent2)}
-.sc-center-connector{display:flex;align-items:center;justify-content:center;padding:20px 10px;background:rgba(200,0,10,.04)}
-.sc-center-title{text-align:center;font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px}
-
-/* PACKAGING DIAGRAM */
-.pkg-layers{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:28px 0;font-family:'JetBrains Mono',monospace}
-.pkg-layers .pl-title{background:var(--ink);color:#fff;padding:10px 20px;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-.pkg-layer{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px}
-.pkg-layer:last-child{border-bottom:none}
-.pkg-layer .pl-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.pkg-layer .pl-name{font-size:13px;font-weight:600;color:var(--ink);min-width:140px}
-.pkg-layer .pl-tech{font-size:12px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;line-height:1.7;flex:1}
-.pkg-layer .pl-tau{font-size:11px;color:var(--accent);background:rgba(200,0,10,.08);padding:3px 8px;border-radius:3px;white-space:nowrap}
-
-/* FOOTNOTE MARKER */
-sup.ref-mark{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);cursor:help;font-weight:700}
-
-/* THERMAL DIAGRAM */
-.thermal-box{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:24px 28px;margin:24px 0;font-family:'JetBrains Mono',monospace;font-size:13px}
-.thermal-box .tb-title{color:var(--accent2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:11px;margin-bottom:14px}
-.thermal-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-size:12px}
-.thermal-row .tr-label{min-width:120px;color:rgba(255,255,255,.5)}
-.thermal-row .tr-bar{flex:1;height:12px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
-.thermal-row .tr-fill{height:100%;border-radius:6px;transition:width 1s ease}
-.thermal-row .tr-val{min-width:60px;text-align:right;color:#fff}
-
-/* FOOTER */
-.footer{background:var(--ink);color:rgba(255,255,255,.4);text-align:center;padding:48px;font-size:12px;font-family:'Noto Sans SC',sans-serif;line-height:2}
-.footer a{color:var(--accent);text-decoration:none}
-
-/* UTIL */
-.note{font-family:'Noto Sans SC',sans-serif;font-size:12px;color:var(--muted);line-height:1.8;padding:12px 16px;background:var(--surface);border-left:3px solid var(--border);border-radius:0 4px 4px 0;margin:16px 0}
-.note strong{color:var(--ink)}
-.h3sub{font-family:'Noto Sans SC',sans-serif;font-size:17px;font-weight:700;margin:36px 0 16px;color:var(--accent)}
-.divider{height:1px;background:var(--border);margin:40px 0}
-
-@media(max-width:768px){
-  .pw{padding:0 20px}
-  .hero{padding:80px 20px 60px}
-  .toc-nav{padding:0 16px}
-  .hero-meta{gap:24px}
-  .lr{grid-template-columns:70px 1fr}
-  .ri{grid-template-columns:20px 1fr}
-  .ri .mit{grid-column:2}
-  .sc-map{grid-template-columns:1fr}
-  #edit-toggle-btn{top:10px;right:10px;padding:6px 12px;font-size:11px}
-}
-@media print{#edit-toolbar,#edit-toggle-btn,.toc-nav{display:none!important}}
+/* ───── RESPONSIVE ───── */
+@media(max-width:768px){.pw{padding:0 18px;}.hero{padding:80px 18px 60px;}.toc-list{padding:0 14px;}.sc-tier{grid-template-columns:1fr;}.sc-tier-name{border-bottom:1px solid var(--border);padding-bottom:6px;}.pkg-compare{grid-template-columns:1fr;}}
+@media print{#edit-toolbar,#edit-toggle-btn,.toc-nav{display:none!important;}.hero{min-height:auto;}}
 </style>
 </head>
 <body>
 
-<!-- EDIT TOOLBAR -->
 <div id="edit-toolbar">
-  <span class="elabel">编辑模式已开启</span>
-  <span class="ehint">点击任意文字即可直接修改</span>
-  <div class="esep"></div>
-  <button class="btn-save" onclick="saveContent()">💾 保存</button>
-  <button class="btn-export" onclick="exportHTML()">⬇ 导出 HTML</button>
-  <button onclick="toggleEditMode()">✕ 退出编辑</button>
+  <span class="el">✏️ 编辑模式 · 点击任意文字直接修改</span>
+  <div class="sep"></div>
+  <button class="bs" onclick="saveContent()">💾 保存</button>
+  <button class="be" onclick="exportHTML()">⬇ 导出 HTML</button>
+  <button onclick="toggleEditMode()">✕ 退出</button>
 </div>
-<button id="edit-toggle-btn" onclick="toggleEditMode()"><span class="tdot"></span>编辑模式</button>
+<button id="edit-toggle-btn" onclick="toggleEditMode()"><span class="dot"></span>编辑模式</button>
 <div id="toast"></div>
 
-<!-- =========== HERO =========== -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-tau-bg">τ</div>
-  <div class="hero-badge">IEEE ISCAS 2026 · 上海 · 2026年5月25日 </div>
-  <h1>华为<span class="tau">韬（τ）</span>定律<br>知识库</h1>
-  <p class="subtitle">从摩尔定律到时间缩微——理论框架、封装原理、产业链影响、散热挑战、同业评价、媒体与金融机构解读、术语录与全文献索引</p>
+  <div class="hero-badge">IEEE ISCAS 2026 · 上海 · 2026年5月25日</div>
+  <h1>华为<span class="t">韬（τ）</span>定律<br>深度知识库</h1>
+  <p class="sub">从摩尔定律到时间缩微 — 论文精读、封装原理、产业链影响、同业评价、媒体与金融机构分析的全维度解读</p>
   <div class="hero-meta">
-    <div class="hero-stat"><div class="num">381<span>款</span></div><div class="label">已量产芯片</div></div>
-    <div class="hero-stat"><div class="num">53.5<span>%</span></div><div class="label">晶体管密度跃升</div></div>
-    <div class="hero-stat"><div class="num">1.4<span>nm</span></div><div class="label">2031年等效目标</div></div>
-    <div class="hero-stat"><div class="num">30<span>%</span></div><div class="label">EDA布线长度缩减</div></div>
-    <div class="hero-stat"><div class="num">6<span>年</span></div><div class="label">静默研发积累</div></div>
+    <div class="hero-stat"><div class="num">381<span>款</span></div><div class="lb">已量产芯片</div></div>
+    <div class="hero-stat"><div class="num">53.5<span>%</span></div><div class="lb">晶体管密度单代提升</div></div>
+    <div class="hero-stat"><div class="num">1.5<span>μm</span></div><div class="lb">混合键合间距（麒麟2026）</div></div>
+    <div class="hero-stat"><div class="num">1.4<span>nm</span></div><div class="lb">2031年等效目标</div></div>
   </div>
   <div class="scroll-hint">向下探索</div>
 </section>
 
-<!-- =========== NAV =========== -->
+<!-- NAV -->
 <nav class="toc-nav">
   <ul class="toc-list">
-    <li><a href="#s1">01 背景</a></li>
-    <li><a href="#s2">02 核心理论</a></li>
-    <li><a href="#s3">03 技术架构</a></li>
-    <li><a href="#s4">04 封装原理</a></li>
-    <li><a href="#s5">05 散热挑战</a></li>
-    <li><a href="#s6">06 实测成果</a></li>
-    <li><a href="#s7">07 产业链影响</a></li>
-    <li><a href="#s8">08 同业评价</a></li>
-    <li><a href="#s9">09 媒体与金融解读</a></li>
+    <li><a href="#s1">01 理论框架</a></li>
+    <li><a href="#s2">02 论文精读</a></li>
+    <li><a href="#s3">03 封装原理</a></li>
+    <li><a href="#s4">04 热管理</a></li>
+    <li><a href="#s5">05 产业链影响</a></li>
+    <li><a href="#s6">06 同业评价</a></li>
+    <li><a href="#s7">07 媒体评价</a></li>
+    <li><a href="#s8">08 金融分析</a></li>
+    <li><a href="#s9">09 风险分析</a></li>
     <li><a href="#s10">10 路线图</a></li>
-    <li><a href="#s11">11 风险分析</a></li>
-    <li><a href="#s12">12 财务模型</a></li>
-    <li><a href="#s13">13 战略KPI</a></li>
-    <li><a href="#sapp">附录·术语</a></li>
-    <li><a href="#sref">参考文献</a></li>
+    <li><a href="#s11">11 财务模型</a></li>
+    <li><a href="#s12">专业术语</a></li>
+    <li><a href="#s13">参考文献</a></li>
   </ul>
 </nav>
 
 <div class="pw">
 
-<!-- ===== S1: 背景 ===== -->
+<!-- S1: THEORY -->
 <section class="section" id="s1">
-  <div class="sh"><span class="snum">01</span><h2 class="stitle">背景与动机：<em>两个约束</em>的交汇</h2></div>
+  <div class="sh"><span class="sn">01</span><h2 class="st">韬（τ）定律：<em>理论框架</em>与历史背景</h2></div>
   <div class="prose">
-    <p>2026年5月25日，在上海举行的IEEE国际电路与系统研讨会（ISCAS 2026）上，华为公司董事、半导体业务部总裁何庭波发表主旨演讲《半导体新路径探索与实践》，正式提出"韬（τ）定律"。这是中国企业首次在全球半导体领域提出系统性的产业演进新原则。</p>
-    <p>何庭波将华为的处境总结为两个约束的叠加：<strong>必然约束</strong>——摩尔定律在未来10年内将触及量子物理极限，这是全行业共同面临的；<strong>偶然约束</strong>——自2020年5月起，美国出口管制使华为比行业同行提前遭遇这堵"墙"，被隔绝于EUV光刻机及相关先进制造工具之外。</p>
+    <p>1965年，Gordon Moore提出晶体管密度大约每18至24个月翻倍的规律，成为此后60年半导体产业的核心指导原则。1974年，Robert Dennard进一步建立按比例缩小理论（Dennard Scaling），证明在保持电场强度不变的前提下，晶体管尺寸与电压可以同比例缩小，从而使得性能每代提升而功耗不增。这两项定律的叠加，驱动了半导体行业的指数级发展。</p>
+    <p>然而，摩尔定律的工程基础在两个阶段相继崩解：2005年前后，Dennard Scaling失效，电压无法继续缩减而单位面积功耗开始上升，迫使行业从单核高频转向多核并行；2015年之后，几何缩微的边际收益持续递减，领先制程的晶圆厂建设成本突破千亿美元量级，单个晶体管成本在部分先进节点上不再继续下降，摩尔定律的"经济性"维度实质上开始失效。</p>
+    <p>在此背景下，2026年5月25日，华为公司董事、半导体业务部总裁何庭波在IEEE ISCAS 2026国际电路与系统研讨会上正式提出<strong>韬（τ）定律（Tau Scaling Law）</strong>——以"时间缩微"（Time Scaling）替代"几何缩微"（Geometric Scaling），作为半导体与电子系统演进的新指导原则。</p>
   </div>
-  <div class="qb"><blockquote>2020年5月以后，为华为定制的各种牢笼远比想象残酷。我常说是一夜之间被打回"原始社会"——我们跟国外同行只有在麦克斯韦方程、薛定谔方程、门捷列夫元素周期表还有沟通的语言，剩下的都分家了。我只能回到科学的第一性，从科学原点思考我们的道路。</blockquote><cite>何庭波，《人民日报》专访，2026年5月27日</cite></div>
-  <div class="cg">
-    <div class="card" style="--cc:#c8000a"><span class="card-icon">🧱</span><h3>摩尔定律的物理极限</h3><p>1965年戈登·摩尔提出的预言驱动半导体产业超过六十年。当制程逼近2nm乃至1nm量级，量子隧穿效应（Quantum Tunneling）令电子在不应通过的区域"穿墙漏电"，功耗散热成为结构性难题。制程节奏从"两年一代"放缓至"三年一代"，单颗晶体管成本不再随节点推进而下降。</p></div>
-    <div class="card" style="--cc:#e8750a"><span class="card-icon">🚧</span><h3>供应链访问受限</h3><p>2020年5月后美国出口管制规则收紧，禁止向华为提供EUV光刻机（ASML）及相关先进制造工具。何庭波表示，这迫使华为"比同行更早遇到这堵墙"，同时也创造了反向压力，促使团队回溯电路理论基础，寻找不依赖光刻节点进步的性能提升路径。</p></div>
-    <div class="card" style="--cc:#1a5fa8"><span class="card-icon">⚗️</span><h3>摩尔定律的经济性问题</h3><p>即便不考虑出口管制，先进制程的Fab建设成本已超千亿美元级别（台积电3nm工艺建设耗资逾200亿美元），每平方毫米成本不再线性下降。SRAM和模拟电路的密度提升远落后于逻辑密度，SoC整体密度增长被拖累，成本却持续攀升。</p></div>
-    <div class="card" style="--cc:#b8860b"><span class="card-icon">🔄</span><h3>后摩尔时代的行业共识</h3><p>IMEC、IEEE IRDS路线图均已将"超越摩尔"（More than Moore）和系统级集成列为关键发展方向。台积电CoWoS、Intel Foveros、AMD 3D V-Cache均是沿这一方向探索的不同实践。韬定律的独特之处在于，将这些工程尝试上升为系统性的理论框架。</p></div>
+
+  <div class="fb">
+    <div class="fm">
+      <span class="fv">τ</span><span class="fo"> = </span><span class="fv">R</span><span class="fo"> × </span><span class="fv">C</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="fi">τ<sub>n+1</sub></span><span class="fo"> = </span><span class="fi">τ<sub>n</sub></span><span class="fo"> / </span><span class="fi">α</span>
+    </div>
+    <div class="fd">
+      <span>τ</span>：时间常数，衡量电路中信号从一个逻辑状态切换到另一状态所需时间（RC延迟）<br>
+      <span>R</span>：等效电阻 &nbsp;|&nbsp; <span>C</span>：等效寄生电容 &nbsp;|&nbsp; <span>α</span>：应用场景相关的代际缩放因子<br>
+      论文披露：移动终端 α ≈ 1.3×/年 &nbsp;|&nbsp; 自动驾驶 α ≈ 1.5×/年 &nbsp;|&nbsp; AI工作负载 α 可达 10×/年<br>
+      <span>系统总 τ = f(τ_晶体管, τ_电路, τ_芯片, τ_系统)</span> — 从皮秒到秒级的跨层统一优化目标
+    </div>
   </div>
-  <div class="infobox"><h4>背景参考：登纳德缩放定律（Dennard Scaling）的终结</h4><p>登纳德缩放定律（1974年）指出：晶体管尺寸每缩小一半，功耗密度保持不变，意味着芯片可以更快且不更热。该定律约于2005年前后失效——晶体管缩小后漏电流不成比例增大，导致功耗不再随几何缩微而等比例降低。这是半导体行业向多核、异构计算以及3D集成转型的深层原因之一，也是韬定律提出的历史背景之一。</p></div>
+
+  <div class="prose">
+    <p>韬定律的核心主张是：τ = RC 不仅是电路理论中的基础方程，更应成为整个半导体产业链的优化北极星。信号传播越慢（τ越大），芯片能效越低、延迟越高。传统摩尔定律通过缩小晶体管物理尺寸来间接降低τ；而韬定律则将直接优化τ作为目标，允许通过多种技术手段实现这一目标，包括但不限于改变光刻工艺节点。</p>
+  </div>
+
+  <table class="ct">
+    <thead><tr><th>维度</th><th>摩尔定律（几何缩微路线）</th><th>韬定律（时间缩微路线）</th></tr></thead>
+    <tbody>
+      <tr><td>核心优化指标</td><td class="od">晶体管几何尺寸（nm/Å）</td><td class="ny">时间常数 τ（ps，各层级）</td></tr>
+      <tr><td>性能提升路径</td><td class="od">缩小晶体管平面面积</td><td class="ny">LogicFolding垂直折叠、缩短信号路径</td></tr>
+      <tr><td>关键制造依赖</td><td class="od">EUV光刻机（ASML主导）</td><td class="ny">混合键合设备、先进封装工艺</td></tr>
+      <tr><td>代际进步节奏</td><td class="od">2年一代→3年一代（放缓）</td><td class="ny">α因子驱动，不同应用域节奏独立</td></tr>
+      <tr><td>理论覆盖层级</td><td class="od">主要在器件/电路层</td><td class="ny">器件→电路→芯片→系统，全栈统一</td></tr>
+      <tr><td>经济性趋势</td><td class="od">成本边际递减，研发支出超10亿美元/代</td><td class="ny">在已有节点上持续迭代，成本扩散更平缓</td></tr>
+      <tr><td>代表性先验实践</td><td class="od">Intel 4/3A、TSMC N2/N14A、Samsung SF2</td><td class="ny">AMD 3D V-Cache、Intel Foveros、TSMC SoIC（均为局部实践）；韬定律将其系统化</td></tr>
+    </tbody>
+  </table>
 </section>
 
-<!-- ===== S2: 核心理论 ===== -->
+<!-- S2: PAPER READING -->
 <section class="section" id="s2">
-  <div class="sh"><span class="snum">02</span><h2 class="stitle"><em>韬（τ）定律</em>理论框架</h2></div>
-  <div class="prose">
-    <p>韬（τ）定律的核心命题：以<em>时间缩微（Time Scaling）</em>替代传统的<em>几何缩微（Geometric Scaling）</em>，作为半导体与电子系统演进的新指导原则。其中τ（tau）代表电路中的时间常数（RC delay），即信号从一个逻辑状态切换到另一个状态所需的特征时间。</p>
-    <p>何庭波同日在中国科学院预发布平台ChinaXiv发表署名论文《A Time Scaling Theory for Multi-Layer Electronic Systems》，系统阐述理论框架。论文指出，传统摩尔定律的演进分为三个历史阶段：单层几何缩微时代→层间各自优化时代→现在进入的"时间成为剩余项"时代——韬定律正是为第三阶段提供新的优化方向。</p>
-  </div>
-  <div class="formula-box">
-    <div class="fm"><span class="fv">τ</span><span class="fo"> = </span><span class="fv">R</span><span class="fo"> × </span><span class="fv">C</span><span class="fo">　→　</span><span class="fv">Performance</span><span class="fo"> ∝ </span><span class="fo">1 / </span><span class="fv">τ</span></div>
-    <div class="fd"><span>τ</span>：时间常数（电路延迟，单位ps）　<span>R</span>：等效电阻（含互连与接触电阻）　<span>C</span>：寄生电容（含布线与节点电容）<br>韬定律目标：<span>系统性降低τ</span>，通过缩短信号传播路径来替代缩小晶体管几何尺寸<br><span>等式</span>：性能提升 ≡ τ缩减　≠　必须几何缩微</div>
-  </div>
-  <div class="prose"><p>论文进一步定义了多层系统的时间常数τ<sub>system</sub>：在多层电子系统中，系统级延迟不再仅由单层晶体管决定，而由跨层互连路径、封装延迟、内存访问延迟等共同决定。通过逻辑折叠（LogicFolding）将关键路径垂直化，可以在不改变光刻节点的前提下大幅压缩系统级τ。何庭波在论文中指出，预计到2035年，AI硬件系统的集成密度将实现100倍以上的增长，时间缩微是实现这一目标的关键路径之一。</p></div>
-  <table class="ctable">
-    <thead><tr><th>维度</th><th>摩尔定律（几何缩微）</th><th>韬定律（时间缩微）</th></tr></thead>
-    <tbody>
-      <tr><td>核心优化目标</td><td class="old">晶体管几何尺寸（nm节点）</td><td class="new">时间常数 τ（信号传播延迟ps）</td></tr>
-      <tr><td>实现机制</td><td class="old">EUV光刻缩小物理特征尺寸</td><td class="new">3D逻辑折叠缩短信号路径</td></tr>
-      <tr><td>关键依赖</td><td class="old">EUV光刻机、精密制程工艺</td><td class="new">混合键合技术、先进封装、3D EDA工具</td></tr>
-      <tr><td>性能来源</td><td class="old">晶体管尺寸缩小（水平方向）</td><td class="new">布线路径缩短（垂直方向）</td></tr>
-      <tr><td>功耗/热量规律</td><td class="old">登纳德缩放2005年后失效</td><td class="new">需主动热管理协同设计</td></tr>
-      <tr><td>经济模型</td><td class="old">Fab投资边际收益递减</td><td class="new">封装/设计投资主导，制程成本相对固定</td></tr>
-      <tr><td>EDA工具需求</td><td class="old">成熟的2D平面布局布线</td><td class="new">需要"真3D"统一多层优化EDA</td></tr>
-      <tr><td>产业话语权</td><td class="old">TSMC/ASML/IMEC主导</td><td class="new">华为提出框架，邀全球协作</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ===== S3: 技术架构 ===== -->
-<section class="section" id="s3">
-  <div class="sh"><span class="snum">03</span><h2 class="stitle">四层<em>协同优化</em>技术体系</h2></div>
-  <div class="prose"><p>华为构建了一套跨越器件、电路、芯片、系统四个层级的多级协同优化机制（Multi-Level Co-optimization）。该体系由何庭波团队在过去六年的工程实践中形成，论文中称之为"τ原生"（τ-native）设计方法论。</p></div>
-  <div class="level-system">
-    <div class="lr"><div class="lname">L1·器件层</div><div class="lbw"><h4>晶体管与互连的本征τ优化</h4><p>优化晶体管及互连的等效电阻（R）与寄生电容（C），从最底层物理层面压缩器件级时间常数。涵盖接触孔电阻降低、金属互连材料优化（探索铜替代方案）、gate-all-around（GAA）或FinFET器件结构调优。</p><span class="tag">RC提取优化</span><span class="tag">接触电阻</span><span class="tag">互连材料</span></div></div>
-    <div class="lr"><div class="lname">L2·电路层</div><div class="lbw"><h4>LogicFolding 逻辑折叠架构</h4><p>将传统2D平面电路布局"折叠"为多层有源堆叠（Active Die Stacking），通过混合键合（Hybrid Bonding）垂直互连各层。关键路径的信号不再在平面上跑长距离布线，而是通过层间直接连接"垂直短路"，显著降低RC负载。麒麟2026为第一代保守方案：仅在关键路径选择性应用，混合键合间距1.5μm，面积利用率68%。</p><span class="tag">LogicFolding</span><span class="tag">Hybrid Bonding</span><span class="tag">Active Die Stack</span><span class="tag">关键路径折叠</span><span class="tag">时钟树压缩</span></div></div>
-    <div class="lr"><div class="lname">L3·芯片层</div><div class="lbw"><h4>Hi-ONE 片上网络 + 全栈协同设计</h4><p>Hi-ONE是构建于上下层之间的高速全局片上网络（Network-on-Chip），为LogicFolding的跨层通信提供高效数据通路。与传统分层设计不同，华为采用软件-架构-硅协同设计（Full-Stack Co-design），实现对指令流与数据流的细粒度工作负载驱动控制，降低端到端执行时间。后硅时钟偏移调整（Post-Silicon Clock Skew Tuning）额外贡献了超过5%的SoC整体性能提升。</p><span class="tag">Hi-ONE NoC</span><span class="tag">后硅时钟调整</span><span class="tag">全栈协同设计</span><span class="tag">数据路径面积-55%</span></div></div>
-    <div class="lr"><div class="lname">L4·系统层</div><div class="lbw"><h4>UnifiedBus 统一总线协议</h4><p>为大规模AI计算集群重新定义互连协议，实现SuperPoD的统一内存寻址（Unified Memory Addressing）与原生内存语义（Native Memory Semantics）。在Atlas 960超节点（支持15,488张昇腾卡的大规模集群）中，UnifiedBus通过消除跨节点地址转换开销，显著降低AI训练过程中的集合通信（AllReduce）延迟。</p><span class="tag">UnifiedBus</span><span class="tag">SuperPoD</span><span class="tag">统一内存寻址</span><span class="tag">Atlas 960</span><span class="tag">15,488张昇腾卡</span></div></div>
-  </div>
-  <div class="ab"><p>何庭波在采访中给出的城市类比：<strong>传统摩尔定律的做法是把道路修得更窄、楼房盖得更密</strong>；而韬定律的做法更像是"把城市的一个区域叠到另一个区域上面，两个区域间根据逻辑关系安装几百万台电梯——这样直达距离不会太远，时间节约，还能提供更多功能"。从芯片物理的角度，"电梯"对应层间直接铜铜键合互连，"两个区域"对应两层有源逻辑层，"几百万台"对应数百万个混合键合（Hybrid Bonding Pad）连接点。</p></div>
-</section>
-
-<!-- ===== S4: 封装原理 ===== -->
-<section class="section" id="s4">
-  <div class="sh"><span class="snum">04</span><h2 class="stitle">封装原理：<em>LogicFolding</em>的物理实现</h2></div>
-  <div class="prose"><p>LogicFolding的物理实现依赖于先进封装技术体系，尤其是<em>混合键合（Hybrid Bonding）</em>技术。理解其物理机制，是区分它与传统Chiplet封装（如CoWoS、EMIB）的关键所在。</p></div>
-
-  <h3 class="h3sub">▌ 混合键合（Hybrid Bonding）原理</h3>
-  <div class="pkg-layers">
-    <div class="pl-title">LOGICFOLDING 物理堆叠结构（麒麟2026 示意）</div>
-    <div class="pkg-layer"><div class="pl-num">T</div><div class="pl-name">顶层有源逻辑层（Top Die）</div><div class="pl-tech">承载部分数字逻辑电路，通过混合键合接口与底层直接互连。关键信号无需经过C4 Bump或μBump，直接通过铜-铜（Cu-Cu）直接键合传输。</div><div class="pl-tau">缩短路径 → τ↓</div></div>
-    <div class="pkg-layer"><div class="pl-num">B</div><div class="pl-name">底层有源逻辑层（Bottom Die）</div><div class="pl-tech">承载主要逻辑模块（CPU核、ISP等），顶层金属间距约720nm。混合键合间距麒麟2026实现为1.5μm，目标路线是降至&lt;0.5μm（齿轮比接近1）。</div><div class="pl-tau">基准层</div></div>
-    <div class="pkg-layer"><div class="pl-num">P</div><div class="pl-name">封装基板（Package Substrate）</div><div class="pl-tech">承担电源分发、对外I/O信号路由。UnifiedBus等系统级互连在此层集成。</div><div class="pl-tau">系统级τ</div></div>
-    <div class="pkg-layer"><div class="pl-num">C</div><div class="pl-name">散热盖/TIM层（Thermal Interface）</div><div class="pl-tech">多层堆叠后底层芯片的热量无法直接通过顶部散逸，需要特殊热界面材料（TIM）和微通道液冷方案协同处理。</div><div class="pl-tau">热管理关键</div></div>
-  </div>
+  <div class="sh"><span class="sn">02</span><h2 class="st">论文精读：<em>《面向多层级电子系统的时间缩微理论》</em></h2></div>
 
   <div class="prose">
-    <p><strong>混合键合 vs 传统封装的核心差异：</strong>传统的C4焊球（Controlled Collapse Chip Connection，间距约100μm）和μBump（微凸块，间距约40-55μm）通过焊料实现层间连接，连接密度受物理尺寸限制。混合键合则通过晶圆级铜-铜直接键合（Cu-Cu Direct Bonding），将连接间距压缩至1-2μm量级，连接密度提升1-2个数量级，信号传输延迟对应大幅降低。</p>
-    <p><strong>LogicFolding vs 传统3D封装（CoWoS、Chiplet）的本质区别：</strong>如Jensen Huang指出，TSMC CoWoS（Chip on Wafer on Substrate）、AMD 3D V-Cache等已有10年历史。这些技术的目标是将<em>不同功能的芯片</em>（Memory + Logic）整合封装。而LogicFolding是将<em>同一芯片的内部逻辑电路</em>在垂直方向重新布局——不是跨Die的chiplet集成，而是单Die内部的3D物理实现，对布局布线（Place & Route）提出了"真3D"统一优化的新要求。这一区别也是部分分析师认为黄仁勋的对比"属于类别错误"（category error）的核心论据。</p>
+    <p>何庭波于2026年5月25日在中国科学院科技论文预发布平台（ChinaXiv，网址：chinaxiv.org/abs/202605.00224）发表署名论文《A Time Scaling Theory for Multi-Layer Electronic Systems》，全文将在《SCIENCE CHINA Information Sciences》正式发表。论文基于华为2020年5月至2026年5月六年间381款量产芯片的工程实践，从两个维度——科学方法论与产业路线图——系统阐述τ缩放技术体系。</p>
   </div>
 
-  <table class="ctable">
-    <thead><tr><th>封装技术</th><th>代表产品</th><th>键合间距</th><th>目标</th><th>与LogicFolding关系</th></tr></thead>
-    <tbody>
-      <tr><td>C4 Flip-Chip</td><td>传统处理器</td><td class="old">~100μm</td><td>Die到基板</td><td class="old">传统路线，密度低</td></tr>
-      <tr><td>μBump</td><td>HBM内存接口</td><td class="old">40-55μm</td><td>存储器堆叠</td><td class="old">中间过渡技术</td></tr>
-      <tr><td>TSMC CoWoS</td><td>H100/H200 GPU</td><td class="old">~45μm interposer</td><td>异质Chiplet集成</td><td class="new">同为3D集成，目标不同</td></tr>
-      <tr><td>TSMC SoIC</td><td>Apple M系列等</td><td class="old">~9μm</td><td>Die stacking</td><td class="new">技术路线最接近</td></tr>
-      <tr><td>Intel Foveros Direct</td><td>Meteor Lake等</td><td class="old">~10μm</td><td>3D chiplet</td><td class="new">类似但目标不同</td></tr>
-      <tr><td>AMD 3D V-Cache</td><td>Ryzen 7000X3D系列</td><td class="old">~9μm</td><td>L3 Cache堆叠</td><td class="new">Memory-on-Logic，非Logic-on-Logic</td></tr>
-      <tr><td>LogicFolding（麒麟2026）</td><td>麒麟2026（保守方案）</td><td class="new">1.5μm</td><td>逻辑层内部重构</td><td class="new">路径缩短逻辑，非chiplet集成</td></tr>
-      <tr><td>LogicFolding（目标路线）</td><td>2029+规划</td><td class="new">&lt;0.5μm（目标）</td><td>全芯片多层折叠</td><td class="new">键合间距接近顶层金属间距</td></tr>
-    </tbody>
-  </table>
+  <div class="qb"><blockquote>论文开篇指出：从几何时代（目标：使晶体管更小）到时间时代（目标：使信号更快），存在一个清晰的历史分期。每层独立优化、时间成为"剩余项"的时代也已经结束。现在是时候将时间本身作为第一优化变量。</blockquote><cite>何庭波，ChinaXiv论文，2026年5月25日</cite></div>
 
-  <h3 class="h3sub">▌ 北京大学EDA工具：补齐"真3D"设计缺口</h3>
-  <div class="prose">
-    <p>LogicFolding带来了EDA设计流程的根本性挑战。传统2D EDA工具（Synopsys、Cadence、Siemens EDA三家占全球市场约74%<sup class="ref-mark" title="来源：EE Times China">R</sup>）是按层设计、逐层优化的，无法原生支持跨层统一优化的"真3D"设计空间。2026年5月27日，北京大学集成电路学院宣布开发了一款专为LogicFolding设计的EDA原型工具。</p>
-    <p>该工具的核心突破在于将多层芯片视为<em>单一垂直结构</em>进行设计，而非分层设计后再拼合。在开源工业级电路的早期测试中，该工具将芯片内部总布线长度减少30%，同时改善了性能和热管理效果。这直接验证了LogicFolding的核心原理——缩短布线路径（即降低R·C乘积）确实可行。然而，目前的工具仍处于原型阶段，距离支持生产规模的流片还有相当距离。</p>
-  </div>
-  <div class="note"><strong>关键工具瓶颈：</strong>Synopsys、Cadence、Siemens（Mentor）三家EDA巨头的中国市场份额合计超过80%，且均受美国出口管制限制。国内EDA企业（华大九天、概伦电子、广立微等）目前主要覆盖模拟/混合信号设计，对先进数字逻辑布局布线的支持仍是薄弱环节。北京大学的原型工具是重要探索，但从原型到产品化还需要大量工程积累。</div>
-</section>
-
-<!-- ===== S5: 散热挑战 ===== -->
-<section class="section" id="s5">
-  <div class="sh"><span class="snum">05</span><h2 class="stitle">散热挑战：<em>3D堆叠</em>的热管理难题</h2></div>
-  <div class="prose">
-    <p>3D逻辑堆叠带来的最大物理挑战之一是热管理。在传统平面芯片中，热量主要通过顶部散热盖向上散逸。当引入多层有源逻辑堆叠后，底层芯片的热量必须穿过上层结构才能到达散热路径，形成"热毯效应"（Thermal Blanket Effect）——底层芯片的结温（Junction Temperature）会显著高于单层设计的预期值。</p>
-  </div>
-  <div class="thermal-box">
-    <div class="tb-title">多层堆叠热阻路径示意（相对值）</div>
-    <div class="thermal-row"><span class="tr-label">单层平面芯片</span><div class="tr-bar"><div class="tr-fill" style="width:25%;background:linear-gradient(90deg,#2a8a2a,#4caf50)"></div></div><span class="tr-val">基准 1×</span></div>
-    <div class="thermal-row"><span class="tr-label">2层逻辑堆叠</span><div class="tr-bar"><div class="tr-fill" style="width:55%;background:linear-gradient(90deg,#e8750a,#ffb74d)"></div></div><span class="tr-val">~2-2.5×</span></div>
-    <div class="thermal-row"><span class="tr-label">4层逻辑堆叠（规划）</span><div class="tr-bar"><div class="tr-fill" style="width:82%;background:linear-gradient(90deg,#c8000a,#ff5252)"></div></div><span class="tr-val">~4-6×</span></div>
-  </div>
   <div class="cg">
-    <div class="card" style="--cc:#c8000a"><span class="card-icon">🌡️</span><h3>热毯效应（Thermal Blanket）</h3><p>底层逻辑层被顶层覆盖，热导通路径受阻。底层晶体管在高频工作状态下的局部热点（Hotspot）温度可能比单层设计高出20-30°C，对晶体管寿命和性能稳定性构成挑战。</p></div>
-    <div class="card" style="--cc:#e8750a"><span class="card-icon">⚡</span><h3>脉冲瞬态热问题</h3><p>高性能计算场景下，芯片功耗存在显著的动态脉冲（Power Spike）。3D堆叠后各层的热容降低，瞬态热响应更剧烈，传统基于稳态平均功耗设计的散热方案不再充分。</p></div>
-    <div class="card" style="--cc:#1a5fa8"><span class="card-icon">🔩</span><h3>热应力与封装可靠性</h3><p>不同材料层（Si、Cu互连、TIM、封装基板）的热膨胀系数（CTE）不同，温度变化引发的热应力可能导致层间键合点（Hybrid Bond Pad）的疲劳断裂，影响可靠性与良率。</p></div>
-    <div class="card" style="--cc:#b8860b"><span class="card-icon">💧</span><h3>散热方案升级压力</h3><p>多层堆叠芯片的功率密度（W/mm²）预计大幅上升，传统气冷散热方案逐渐无法满足需求，推动液冷（Liquid Cooling）、相变冷却（Two-Phase Cooling）乃至芯片级微通道冷却（Microchannel Cooling）成为刚性需求。</p></div>
+    <div class="card" style="--cc:#c8000a">
+      <span class="card-ic">📐</span>
+      <h3>分层 τ 定义</h3>
+      <p>论文将τ定义为跨越四个层级的时间常数：<br>
+      τ_晶体管（ps级）：器件开关延迟，由RC决定<br>
+      τ_电路（ns级）：逻辑门关键路径传播延迟<br>
+      τ_芯片（μs级）：片上存储访问与互连延迟<br>
+      τ_系统（ms-s级）：数据中心工作负载响应时间<br>
+      总系统τ = f(τ_T, τ_C, τ_chip, τ_sys)，各层均可独立优化。</p>
+    </div>
+    <div class="card" style="--cc:#1b4f8a">
+      <span class="card-ic">📊</span>
+      <h3>代际缩放关系</h3>
+      <p>τ_(n+1) = τ_n / α，其中α为非固定通用参数，随应用场景而变：<br>
+      移动终端：α ≈ 1.3×/年（功耗约束主导）<br>
+      自动驾驶：α ≈ 1.5×/年（安全性驱动）<br>
+      AI算力：α 可达 10×/年（算力直接转化为经济价值）<br>
+      此设计允许不同产业垂直领域以独立节奏演进，而非强制统一时钟。</p>
+    </div>
+    <div class="card" style="--cc:#b06b00">
+      <span class="card-ic">🔬</span>
+      <h3>麒麟2026量化验证</h3>
+      <p>论文披露具体工程数据：<br>
+      晶体管密度：155 → 238 MTr/mm²（+53.5%，同代单步完成）<br>
+      P核能效：+41%&nbsp;|&nbsp; 最大频率：+13%（3.1 GHz）<br>
+      SRAM工作频率：+40%以上<br>
+      NoC数据路径面积：-55%<br>
+      时钟缓冲器数量：-50%+&nbsp;|&nbsp; 时钟偏斜：-25%<br>
+      代表性核心布线长度：-30%</p>
+    </div>
+    <div class="card" style="--cc:#1a7a3e">
+      <span class="card-ic">🤖</span>
+      <h3>AI系统路径</h3>
+      <p>论文指出：大规模AI集群中，>80%能量消耗于数据移动，>70%系统成本分配给数据存储。由此提出AI系统级τ路径：<br>
+      UnifiedBus：统一内存语义互连<br>
+      Hi-ONE：近封装光学I/O<br>
+      3D Folding：芯片层面折叠<br>
+      目标：到2035年，AI硬件集成度较2025年提升100倍以上</p>
+    </div>
   </div>
 
-  <h3 class="h3sub">▌ 华为的热管理协同设计方案</h3>
   <div class="prose">
-    <p>根据已公开的信息，华为放弃了行业传统的"先设计芯片、后考虑散热"模式，转而在LogicFolding布局的早期阶段即规划热传导路径和散热结构。具体策略包括：<strong>微区域定点散热</strong>——针对热点集中在计算核心和高频开关电路的特点，采用精准的局部散热设计；<strong>协同热路径规划</strong>——在3D布局阶段预留垂直热传导通路（Thermal TSV），将底层芯片热量引导至封装外侧。</p>
-    <p>这一挑战也直接推动了数据中心液冷技术的需求升级。从服务器机架级液冷（Rack-Level Liquid Cooling），到冷板式液冷（Cold Plate Cooling），再到浸没式冷却（Immersion Cooling），3D堆叠芯片对散热基础设施提出了更严格的要求。多层逻辑堆叠如果推广至AI训练服务器，单台服务器的冷却需求（热功耗密度）将进一步提升。</p>
+    <p>论文还特别指出麒麟2026的LogicFolding实施为"保守方案"（conservative implementation）：仅在关键路径上选择性应用，TSV着陆仅前进了顶层金属层以下一步，折叠层数尚有限。论文明确声明这是一个阶段性起点，而非终态。即便如此，CPU性能核心频率已重返3.1 GHz，是近年麒麟系列中的代际跳升。</p>
   </div>
-  <div class="note"><strong>散热技术现状：</strong>当前Samsung HBM3E（用于H100/H200）已采用2-layer active die stacking，实际验证了部分热管理方案。Intel Foveros系列在Meteor Lake等产品中也已处理类似散热挑战。华为面临的特殊性在于：其LogicFolding针对的是逻辑层内部（intra-die）的堆叠，功率密度高于内存堆叠，散热管理更为复杂，且缺乏与国际散热材料供应商的协同开发条件。</div>
-</section>
 
-<!-- ===== S6: 实测成果 ===== -->
-<section class="section" id="s6">
-  <div class="sh"><span class="snum">06</span><h2 class="stitle">麒麟2026：<em>首颗韬芯片</em>量化数据</h2></div>
-  <div class="prose"><p>麒麟2026（Kirin 2026）是全球首款完整实施LogicFolding架构的商用SoC，预计于2026年秋季随华为新款手机上市。以下数据来自何庭波在ChinaXiv发表的论文及ISCAS 2026演讲（华为麒麟与巴龙首席架构师黄勇亦在ISCAS 2026上发表了配套演讲"逻辑折叠：移动终端SoC设计实践"，提供了更多工程细节）。</p></div>
   <div class="mr">
-    <div class="mb"><div class="val">53.5<span class="unit">%</span></div><div class="label">单代晶体管密度提升</div></div>
-    <div class="mb"><div class="val">238<span class="unit">MTr/mm²</span></div><div class="label">最终晶体管密度</div></div>
-    <div class="mb"><div class="val">155→238<span class="unit"></span></div><div class="label">密度跃升（同代分阶段）</div></div>
-    <div class="mb"><div class="val">41<span class="unit">%</span></div><div class="label">P核能效提升</div></div>
-    <div class="mb"><div class="val">3.1<span class="unit">GHz</span></div><div class="label">CPU性能核频率</div></div>
-    <div class="mb"><div class="val">55<span class="unit">%</span></div><div class="label">Hi-ONE数据路径面积缩减</div></div>
-    <div class="mb"><div class="val">&gt;5<span class="unit">%</span></div><div class="label">后硅时钟调整独立贡献</div></div>
-    <div class="mb"><div class="val">1.5<span class="unit">μm</span></div><div class="label">混合键合间距（第一代）</div></div>
+    <div class="mb"><div class="v">1.5<span class="u">μm</span></div><div class="l">混合键合间距<br>（麒麟2026实现值）</div></div>
+    <div class="mb"><div class="v"><0.5<span class="u">μm</span></div><div class="l">套刻精度要求<br>（对准精度）</div></div>
+    <div class="mb"><div class="v"><1.5<span class="u">μm</span></div><div class="l">TSV关键尺寸<br>目标值</div></div>
+    <div class="mb"><div class="v"><6<span class="u">μm</span></div><div class="l">TSV间距目标<br>（含KOZ）</div></div>
+    <div class="mb"><div class="v">≈2</div><div class="l">齿轮比（Gear Ratio）<br>键合间距/顶层金属间距</div></div>
+    <div class="mb"><div class="v">~100<span class="u">%</span></div><div class="l">智能冗余方案<br>目标良率</div></div>
   </div>
-  <div class="infobox"><h4>注解：关于"等效1.4nm"的表述</h4><p>华为2031年的目标是晶体管密度"达到等效1.4nm（14Å）制程水平"——这指的是晶体管数量密度（MTr/mm²）达到理论1.4nm工艺节点所能实现的密度，而非芯片的实际光刻制程为1.4nm。目前全球量产最先进的商用制程为台积电3nm，1.4nm在理论上接近硅基半导体的物理极限。华为的目标是通过多层折叠在密度指标上等效，而非通过光刻实现。两者的功耗特性、电路行为等方面仍有差异，独立机构的实测验证将是关键。</p></div>
+</section>
+
+<!-- S3: PACKAGING PRINCIPLE -->
+<section class="section" id="s3">
+  <div class="sh"><span class="sn">03</span><h2 class="st">封装原理：<em>LogicFolding</em>与先进封装技术体系</h2></div>
+
   <div class="prose">
-    <p><strong>战略意义：</strong>从155 MTr/mm²到238 MTr/mm²的密度提升，在传统单层工艺路线下需要约三年的制程节点进步才能实现。华为在保持相同光刻节点的条件下，于<em>单代产品内</em>完成了这一跃升——这是韬定律"时间缩微"路径在工程层面最有说服力的数据支撑。CPU性能核频率重回3.1GHz，标志着华为高端手机SoC在被限制光刻节点数年后，重新获得了与旗舰产品竞争所必需的基准性能。</p>
+    <p>要理解LogicFolding，必须首先明确它与现有3D先进封装技术的本质区别。现有技术（如TSMC的CoWoS/SoIC、Intel的Foveros、AMD的3D V-Cache）主要采用的是<strong>Die-to-Die堆叠</strong>（芯片到芯片堆叠）：在设计阶段，各Die（芯片单元）作为独立完整的功能模块分别设计制造，然后在封装阶段将其垂直集成。LogicFolding则不同，它属于<strong>Cell-to-Cell折叠</strong>（单元级折叠）：在设计阶段即将一颗芯片的内部电路——精确到逻辑门和触发器（Flip-Flop）层级——分配到垂直堆叠的多个有源层上，由混合键合连接，两层在电路设计上被视作一个连续的布局平面。</p>
   </div>
-  <div class="qb"><blockquote>首颗使用"逻辑折叠"的芯片是麒麟2026。黄勇在演讲中详细分析了逻辑折叠带来的工艺、时序、散热和功耗方面的挑战，分享了从晶体管密度、性能和能效、关键应用案例以及良率/成本角度的实际优势。麒麟2026的逻辑折叠应用仍偏保守，混合键合间距为1.5微米，折叠针对关键路径选择性应用，而不是整个设计全面应用。</blockquote><cite>电子工程专辑（EET-China），ISCAS 2026 报道，2026年5月</cite></div>
+
+  <div class="pkg-compare">
+    <div class="pkg-box">
+      <div class="badge">传统 DIE-TO-DIE 堆叠</div>
+      <h4>代表：TSMC SoIC / Intel Foveros / AMD 3D V-Cache</h4>
+      <ul>
+        <li>各Die独立完整设计，封装时集成</li>
+        <li>主要用于：Logic+HBM、CPU+Cache等异质功能集成</li>
+        <li>设计与制造流程相对成熟</li>
+        <li>Die间界面为封装级互连（有协议开销）</li>
+        <li>无法消除Die内部的关键路径延迟</li>
+        <li>已有TSMC SoIC量产经验（始于约2017年）</li>
+      </ul>
+    </div>
+    <div class="pkg-box highlight">
+      <div class="badge">LOGICFOLDING：单元级折叠</div>
+      <h4>代表：华为麒麟2026（首次商业化量产）</h4>
+      <ul>
+        <li>设计阶段即分配电路单元到多个有源层</li>
+        <li>垂直互连参与布线如同额外金属层</li>
+        <li>直接缩短关键路径（critical path）布线长度</li>
+        <li>降低单元间RC负载，实现τ直接压缩</li>
+        <li>时钟树在三维空间中重构，降低偏斜</li>
+        <li>需要全新的3D-aware EDA工具链支持</li>
+        <li>混合键合间距1.5μm（目标趋近顶层金属间距）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="an-box">
+    <p><strong>齿轮比（Gear Ratio）的物理意义：</strong>论文中提出的一个关键约束参数。齿轮比 = 混合键合间距 ÷ 顶层金属层间距。麒麟2026的顶层金属层间距约720nm，混合键合间距1.5μm，齿轮比约为2。当齿轮比趋近1时，两个有源层之间的互连可以与芯片内部单层布线同等密度地参与信号路径，键合界面处的"鸟笼式布线"（Bird-cage Routing）开销趋近于零。论文将齿轮比降至接近1视为LogicFolding成熟度的关键衡量指标。</p>
+  </div>
+
+  <div class="prose">
+    <p>混合键合（Hybrid Bonding）是LogicFolding的物理基础。与传统的焊球（Solder Bump）或铜柱（Cu Pillar）封装不同，混合键合通过铜-铜直接原子键合，无需底部填充胶（Underfill），可将互连间距从传统封装的几十微米压缩至1-2微米量级。这要求极高的表面洁净度（任何大于1μm的颗粒均可导致界面空洞）、超精密的套刻对准（≤0.5μm）以及高度控制的晶圆薄化（Total Thickness Variation ≤5%甚至≤0.5μm绝对偏差）。</p>
+    <p>北京大学在发布韬定律两天后（2026年5月27日），宣布开发出专为LogicFolding架构定制的3D EDA工具。该工具采用"真3D"（True-3D）方法，将多层芯片作为单一垂直结构整体优化，而非分层2D后堆叠。初步测试显示，相比传统EDA工作流，总内部布线长度减少约30%，并改善热管理效果。这是LogicFolding生态开始吸引学术界参与的早期信号。</p>
+  </div>
+
+  <div class="cg">
+    <div class="card" style="--cc:#c8000a">
+      <span class="card-ic">🔗</span>
+      <h3>Hi-ONE：片上光互连</h3>
+      <p>论文提出的系统层技术之一。通过在封装近侧集成光学I/O，实现近封装级的光电共封装（Co-Packaged Optics）。目标是绕过2.5D扇出困境，在AI超节点中将跨节点通信延迟大幅压缩。与传统铜互连相比，光互连可在更低能耗下实现更高带宽密度。</p>
+      <span class="tag">CPO</span><span class="tag">光电集成</span><span class="tag">低延迟</span>
+    </div>
+    <div class="card" style="--cc:#1b4f8a">
+      <span class="card-ic">🚌</span>
+      <h3>UnifiedBus：统一总线协议</h3>
+      <p>为AI计算系统重新定义互连协议。以原生内存语义（Native Memory Semantics）实现全系统统一内存寻址，消除传统PCIe/InfiniBand/NVLink等多层协议栈的转换开销。Atlas 960超节点（支持15,488张昇腾卡）即基于此架构，目标大幅降低跨节点通信延迟。</p>
+      <span class="tag">统一内存</span><span class="tag">SuperPoD</span><span class="tag">低协议开销</span>
+    </div>
+    <div class="card" style="--cc:#1a7a3e">
+      <span class="card-ic">🧠</span>
+      <h3>后硅时钟偏移调整</h3>
+      <p>（Post-Silicon Clock Skew Tuning）麒麟2026引入的技术之一。3D折叠后，时钟树的物理结构发生根本变化，传统EDA工具无法精确预测晶圆实际性能中的时钟偏斜分布。华为开发了后硅调整方案，可在芯片制造完成后对时钟偏移做细粒度调节。该方案独立贡献了超过5%的SoC整体性能提升。</p>
+      <span class="tag">Clock Skew</span><span class="tag">后硅调整</span><span class="tag">+5%性能</span>
+    </div>
+  </div>
 </section>
 
-<!-- ===== S7: 产业链影响 ===== -->
-<section class="section" id="s7">
-  <div class="sh"><span class="snum">07</span><h2 class="stitle">产业链影响：<em>上下游全景</em>分析</h2></div>
-  <div class="prose"><p>韬定律及其核心技术LogicFolding的产业链影响是多维度的。从上游的设备与材料，到中游的设计与制造，再到下游的系统集成与数据中心基础设施，均面临不同程度的结构性调整压力或机遇。</p></div>
+<!-- S4: THERMAL -->
+<section class="section" id="s4">
+  <div class="sh"><span class="sn">04</span><h2 class="st">热管理挑战：<em>液冷</em>与3D堆叠的热力学边界</h2></div>
 
-  <div class="sc-map">
-    <div class="sc-col">
-      <div class="sc-col-header">🔼 上游</div>
-      <div class="sc-items">
-        <div class="sc-item"><div class="sc-name">混合键合设备商</div><div class="sc-desc">AMAT（Applied Materials）、BE Semiconductor（Besi）、EV Group是全球主要混合键合设备供应商。LogicFolding的规模化将大幅拉动精密键合设备需求，国内以上海微电子（SMEE）为代表的企业尚在追赶。</div><span class="sc-impact impact-up">▲ 需求显著增长</span></div>
-        <div class="sc-item"><div class="sc-name">键合材料与特种TIM</div><div class="sc-desc">铜-铜直接键合需要高纯铜材料与超平滑晶圆表面（CMP抛光精度）；层间热界面材料（TIM）需开发高导热低厚度新品种以应对3D热管理需求。</div><span class="sc-impact impact-up">▲ 材料升级需求</span></div>
-        <div class="sc-item"><div class="sc-name">EDA软件</div><div class="sc-desc">Synopsys、Cadence、Siemens占据74%以上全球市场，三者均受出口管制影响。国内华大九天、概伦电子面临战略机遇，北京大学原型工具提供早期路径，但产品化尚需时日。</div><span class="sc-impact impact-watch">◆ 关键瓶颈</span></div>
-        <div class="sc-item"><div class="sc-name">硅通孔/TSV材料</div><div class="sc-desc">TSV（Through-Silicon Via）是层间垂直互连的另一条技术路径，与混合键合协同使用。TSV金属填充（通常为铜）、绝缘材料（SiO₂）等是上游基础材料供应链。</div><span class="sc-impact impact-up">▲ 需求稳步增长</span></div>
-      </div>
-    </div>
-    <div class="sc-col">
-      <div class="sc-col-header">🔄 中游</div>
-      <div class="sc-items">
-        <div class="sc-center-title">韬定律核心技术节点</div>
-        <div class="sc-item"><div class="sc-name">先进封装（中芯、长电等）</div><div class="sc-desc">逻辑折叠的规模化要求国内先进封装能力快速提升，长电科技、通富微电、华天科技等封测大厂将受益，但同时面临技术能力升级的压力——从传统倒装封装向混合键合转型的技术门槛很高。</div><span class="sc-impact impact-up">▲ 战略升级机遇</span></div>
-        <div class="sc-item"><div class="sc-name">晶圆代工（中芯国际等）</div><div class="sc-desc">LogicFolding允许在成熟制程节点（如中芯国际7nm级）实现等效先进性能，直接提升成熟节点的技术价值，利好中芯国际等已有量产能力的国内晶圆厂。</div><span class="sc-impact impact-up">▲ 成熟节点价值提升</span></div>
-        <div class="sc-item"><div class="sc-name">芯片设计（海思、寒武纪等）</div><div class="sc-desc">韬定律提供了在现有工艺节点持续迭代的方法论，但LogicFolding的实施需要大量额外的设计工程投入。初期受益主要集中于有能力消化3D设计复杂性的大型设计公司。</div><span class="sc-impact impact-watch">◆ 分化影响</span></div>
-        <div class="sc-item"><div class="sc-name">测试与检测（光鉴科技等）</div><div class="sc-desc">3D堆叠芯片的良率管控需要新型测试方法，包括KGD（Known Good Die）测试、层间对准检测、热成像检测等。现有测试设备和方法学需要相应升级。</div><span class="sc-impact impact-watch">◆ 技术升级需求</span></div>
-      </div>
-    </div>
-    <div class="sc-col">
-      <div class="sc-col-header">🔽 下游</div>
-      <div class="sc-items">
-        <div class="sc-item"><div class="sc-name">AI计算基础设施</div><div class="sc-desc">Atlas 960超节点支持15,488张昇腾卡的集群，UnifiedBus协议降低跨节点通信延迟。若AI算力需求持续扩张，昇腾+韬定律的组合是国内AI基础设施的关键替代方案。</div><span class="sc-impact impact-up">▲ 直接受益</span></div>
-        <div class="sc-item"><div class="sc-name">液冷基础设施</div><div class="sc-desc">3D堆叠后功率密度（W/mm²）大幅上升，推动数据中心液冷需求（冷板式、浸没式）加速普及。海悦智冷、申菱环境、英维克等液冷厂商的市场需求将被显著拉动。</div><span class="sc-impact impact-up">▲ 刚性需求驱动</span></div>
-        <div class="sc-item"><div class="sc-name">消费终端（手机/PC）</div><div class="sc-desc">麒麟2026若性能数据得到市场验证，将直接提升Mate系列旗舰手机的竞争力。手机散热方案（VC均热板、石墨烯散热膜）可能需要相应升级以应对更高功率密度。</div><span class="sc-impact impact-up">▲ 旗舰市场竞争力恢复</span></div>
-        <div class="sc-item"><div class="sc-name">汽车/智能驾驶</div><div class="sc-desc">MDC智驾域控制器若采用LogicFolding技术，可在不更换工艺节点的情况下提升算力密度，满足L3+自动驾驶对实时推理算力的持续需求增长。</div><span class="sc-impact impact-neutral">→ 中期机遇</span></div>
-      </div>
-    </div>
+  <div class="prose">
+    <p>三维逻辑折叠带来的最主要工程挑战之一，是热管理（Thermal Management）。在传统2D芯片中，所有发热晶体管分布在单一平面上，直接与散热器接触；当多个有源逻辑层垂直堆叠时，底层（base die）被顶层（top die）覆盖，形成热毯效应（Thermal Blanket Effect），散热路径大幅增长，热阻（Thermal Resistance）急剧上升。</p>
   </div>
 
-  <h3 class="h3sub">▌ 液冷产业链的结构性机遇</h3>
-  <div class="prose"><p>3D逻辑堆叠带来功率密度的指数级上升，是推动数据中心液冷技术普及的重要驱动力。行业普遍预测，当单芯片TDP（热设计功耗）超过300W时，传统空气冷却方案的PUE（电能使用效率）将大幅恶化，液冷成为必要选项。若韬定律路线图按计划演进（2029-2031年全面多层折叠），AI训练芯片的功率密度将进一步提升，数据中心液冷渗透率的加速提升将是直接结果之一。这包括：冷板式液冷（Cold Plate）——精准针对芯片热点；浸没式冷却（Immersion）——整机浸入绝缘液体；以及芯片级微通道冷却（Microchannel Liquid Cooling）——冷液直接流经封装内部的微米级通道，热阻极低，是应对极高功率密度（>1000W/cm²）场景的前沿方向。</p></div>
-</section>
-
-<!-- ===== S8: 同业评价 ===== -->
-<section class="section" id="s8">
-  <div class="sh"><span class="snum">08</span><h2 class="stitle">同业评价：<em>全球科技企业</em>反应</h2></div>
-  <div class="voice-grid">
-    <div class="voice-card">
-      <div class="who"><div class="avatar">黄</div><div class="who-info"><div class="name">黄仁勋（Jensen Huang）</div><div class="title">NVIDIA CEO，台北电脑展前夕受访，2026年5月28日</div></div></div>
-      <blockquote>"这对华为而言是一个重大突破（breakthrough for Huawei），但对台积电不构成威胁。TSMC已经使用芯片堆叠和3D封装技术将近十年了。'这是一项非常好的技术，但台积电已拥有这项技术十年。'"他同时表示："我们是唯一能够在每家云服务中使用的平台、芯片和计算架构。我们欢迎竞争，英伟达只需继续前进。"</blockquote>
-      <span class="stance stance-neutral">认可突破·不认为构成威胁</span>
-    </div>
-    <div class="voice-card">
-      <div class="who"><div class="avatar">分</div><div class="who-info"><div class="name">Ian Cutress</div><div class="title">半导体独立分析师（原AnandTech），X平台评论，2026年5月</div></div></div>
-      <blockquote>"这算不上重大突破（doesn't look like a huge breakthrough）"——他将LogicFolding描述为一种"预期所有人都会去做"的技术，因为华为"无法在光刻上缩放"，所以在加速其他部分的路线图。言下之意，这是一种在约束条件下的合理替代方案，而非开创性的物理突破。</blockquote>
-      <span class="stance stance-skeptical">技术上存疑·认为非独创</span>
-    </div>
-    <div class="voice-card">
-      <div class="who"><div class="avatar">F</div><div class="who-info"><div class="name">Futurum Group 分析团队</div><div class="title">半导体行业研究机构，发布深度报告，2026年5月</div></div></div>
-      <blockquote>"τ Scaling Law是迄今为止最具理论连贯性的后摩尔时代框架，为工艺技术人员、电路设计师和系统架构师提供了共同的优化衡量单位（shared optimization currency）。麒麟SoC在固定节点通过3D逻辑重构实现55%的晶体管密度提升，即便抛开更宏观的理论，这本身也是显著的成就。"同时指出：TSMC和Intel的制程节点领先优势将在预测期内延续，其混合键合路线图也在持续追赶，而华为的架构主张仍依赖于尚不成熟的工具链和生态系统。</blockquote>
-      <span class="stance stance-neutral">认可理论框架·对实施持审慎态度</span>
-    </div>
-    <div class="voice-card">
-      <div class="who"><div class="avatar">技</div><div class="who-info"><div class="name">技术分析师群体（pbxscience.com深度分析）</div><div class="title">指出黄仁勋评论的"类别错误"，2026年5月29日</div></div></div>
-      <blockquote>"黄仁勋的评价基于一个根本性的类别错误（category error）。韬定律不是一项3D封装技术。何庭波将其定义为一种新的优化轴线——将行业的核心问题从'晶体管能做多小'转变为'信息在系统中传输能多快'。两者针对的是不同层次的优化目标：TSMC的CoWoS是异质芯片集成（inter-die），而LogicFolding是单芯片内部的3D物理重构（intra-die）。"</blockquote>
-      <span class="stance stance-positive">为韬定律技术区分性辩护</span>
-    </div>
-    <div class="voice-card">
-      <div class="who"><div class="avatar">苗</div><div class="who-info"><div class="name">苗福友</div><div class="title">全球计算联盟秘书处CTO，新华网采访，2026年5月26日</div></div></div>
-      <blockquote>"当前模块间通信时延已成为制约高端计算效率的核心因素，传统以半导体硬件资源数量衡量计算性能的标准，早已不能反映产业实际状况。韬定律综合架构创新、Chiplet、先进堆叠等多项前沿技术，从通信时延这一维度重构计算性能评价标准，为行业发展提供了全新思路与重要突破方向。"</blockquote>
-      <span class="stance stance-positive">肯定评价框架的系统性</span>
-    </div>
-    <div class="voice-card">
-      <div class="who"><div class="avatar">京</div><div class="who-info"><div class="name">北京大学集成电路学院研究团队</div><div class="title">EDA工具原型发布，南华早报报道，2026年5月27日</div></div></div>
-      <blockquote>研究人员将新EDA原型定义为"真3D"（true-3D）方法——将多层芯片视为单一结构进行设计，而非传统的逐层设计后拼合。在开源工业级电路的早期测试中，该方法将芯片内部总布线长度减少了30%，同时改善了性能和热管理效果。早期测试结果被描述为"非常有前景"，但距离支持完整生产流片的商业化工具仍有距离。</blockquote>
-      <span class="stance stance-positive">EDA层面的学术支撑</span>
-    </div>
+  <div class="thermal-box">
+    <h4>⚠️ 热管理核心挑战（EE Times / TechSoda等机构技术分析综合）</h4>
+    <p><strong>热密度倍增：</strong>逻辑层数每增加一层，同等封装面积内的总功耗密度近似倍增，局部热点（Hotspot）温度更难控制。底层芯片的散热路径须穿越顶层芯片材料，等效热阻大幅增加。</p>
+    <p><strong>应力管理：</strong>不同材料（硅、铜、介质）热膨胀系数（CTE）差异在3D结构中叠加，高功耗场景下的温度循环可加剧分层（Delamination）和微裂纹风险，影响长期可靠性。</p>
+    <p><strong>TSV热阻：</strong>尽管TSV直径目标值低于1.5μm，但大量密集TSV在高电流密度下自身也产生焦耳热（Joule Heating），需在设计阶段精细规划电流分布以避免局部过热。</p>
   </div>
 
-  <h3 class="h3sub">▌ 竞争对手的技术路线参照</h3>
-  <table class="ctable">
-    <thead><tr><th>公司/产品</th><th>3D技术</th><th>与LogicFolding的异同</th><th>当前状态</th></tr></thead>
+  <div class="prose">
+    <p><strong>液冷（Liquid Cooling）的产业意义：</strong>先进封装与3D堆叠的热密度大幅提升，是推动数据中心液冷渗透率加速的底层技术驱动力。AI数据中心（尤其是配备H100/H200/B200等高TDP GPU或昇腾等加速器的集群）的机架功密度已从传统5-10 kW/机架跃升至50-100 kW/机架以上。液冷方案分为：</p>
+  </div>
+
+  <table class="ct">
+    <thead><tr><th>液冷类型</th><th>技术原理</th><th>适用场景</th><th>与LogicFolding的关联</th></tr></thead>
     <tbody>
-      <tr><td>TSMC CoWoS</td><td>硅中介层上的Chiplet集成</td><td class="old">Inter-Die集成，非Intra-Die逻辑折叠</td><td>高量产，H100/H200/Blackwell的基础</td></tr>
-      <tr><td>TSMC SoIC</td><td>Face-to-Face/Face-to-Back裸片堆叠</td><td class="new">技术路线最接近，间距~9μm</td><td>量产中，Apple/Nvidia部分产品采用</td></tr>
-      <tr><td>Intel Foveros Direct</td><td>铜-铜直接键合Die Stack</td><td class="new">机制相似，目标为chiplet集成</td><td>Meteor Lake等产品采用，进入量产</td></tr>
-      <tr><td>AMD 3D V-Cache</td><td>SRAM缓存堆叠于CPU Die上</td><td class="old">Memory-on-Logic，非Logic-on-Logic</td><td>Ryzen 7000X3D系列，量产成熟</td></tr>
-      <tr><td>Samsung HBM3E</td><td>DRAM多层堆叠（8-12层）</td><td class="old">存储器堆叠，与逻辑堆叠原理不同</td><td>量产，H100/H200等采用</td></tr>
-      <tr><td>LogicFolding（麒麟2026）</td><td>逻辑层内部2层折叠（保守）</td><td class="new">逻辑层内部重构，间距1.5μm（行业最小之一）</td><td>2026年秋季首发，验证阶段</td></tr>
+      <tr><td>冷板式液冷（Cold Plate）</td><td class="od">液体在密封冷板内循环，通过导热接触芯片背面散热</td><td class="od">服务器/AI加速节点，机架功密度20-50 kW</td><td class="na">LogicFolding芯片面积减少但功密度更高，冷板设计需匹配热点分布</td></tr>
+      <tr><td>浸没式液冷（Immersion）</td><td class="od">整体服务器浸没于电子氟化液或矿物油中，全面换热</td><td class="od">超高功密度机架（>50 kW），数据中心整体规划</td><td class="na">为超节点（Atlas 960）提供最优散热环境，降低芯片接合点温度</td></tr>
+      <tr><td>近芯液冷（Near-Chip Cooling）</td><td class="od">微通道冷却结构集成于封装内部，液体在封装级别流通</td><td class="od">高密度3D堆叠封装的终极散热方案</td><td class="na">与LogicFolding多层结构未来深度整合的研究方向，可精确控制各层热点</td></tr>
     </tbody>
   </table>
 
-  <div class="note"><strong>注：</strong>关于Google TPU、SpaceX Starlink等企业的态度，目前尚无公开表态或评论记录。谷歌在其TPU v5系列中也在探索先进封装和3D集成技术（与TSMC合作），从技术方向上与韬定律存在一定重叠，但谷歌针对韬定律本身未有公开发言。SpaceX主要关注点在于卫星通信芯片的成本与可靠性，与韬定律的直接相关性较为有限。</div>
+  <div class="prose">
+    <p>从供应链视角看，LogicFolding对热管理设备提出的新要求，将推动液冷产业规模进一步扩张。何庭波论文亦明确指出，解决3D折叠的热管理问题，需要"在封装与系统层面系统性地优化热阻和散热路径"——这意味着芯片设计、封装材料与液冷基础设施的协同演进将成为必要条件，而非可选项。国内液冷设备企业（英维克、申菱环境、曙光数创等）及散热材料供应商（导热硅脂、热界面材料等）均将随高密度封装需求扩大而获得增量市场。</p>
+  </div>
 </section>
 
-<!-- ===== S9: 媒体与金融解读 ===== -->
-<section class="section" id="s9">
-  <div class="sh"><span class="snum">09</span><h2 class="stitle">媒体与金融机构<em>解读</em></h2></div>
+<!-- S5: SUPPLY CHAIN -->
+<section class="section" id="s5">
+  <div class="sh"><span class="sn">05</span><h2 class="st">产业链全景：<em>上下游影响</em>与关键企业分析</h2></div>
 
-  <div class="media-eval">
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">🌐</span><div><div class="me-outlet">South China Morning Post</div><div class="me-type">国际英文媒体</div></div></div>
-      <div class="me-body"><p>报道着重指出北京大学EDA工具的同步发布，将两者定性为"中国半导体产业构建自主技术体系的协同行动"。报道中引用分析人士观点：华为到2031年生产性能等效1.4nm芯片的目标"非常雄心勃勃"，且不依赖受美国出口管制限制的西方芯片制造工具。</p><div class="me-date">2026-05-27</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">📰</span><div><div class="me-outlet">Nikkei Asia</div><div class="me-type">日本主流财经媒体</div></div></div>
-      <div class="me-body"><p>以"Huawei unveils Tau Scaling Law targeting 1.4nm-equivalent chip performance by 2031"为题，重点关注华为绕过EUV光刻设备出口限制的战略逻辑，以及对台积电现有商业模式的潜在影响。报道援引专家意见：散热和制造工艺挑战使2031年时间线存疑。</p><div class="me-date">2026-05-26</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">📊</span><div><div class="me-outlet">Tom's Hardware（技术媒体）</div><div class="me-type">专业技术分析</div></div></div>
-      <div class="me-body"><p>详细解析LogicFolding与传统3D封装的技术区别，指出北京大学EDA工具的"真3D"方法在概念上的意义："Synopsys和Cadence的3D IC工具解决的是不同问题——将独立Chiplet整合到封装中，而不是在单芯片内部跨垂直结构进行统一优化。"同时指出，30%的布线长度缩减是否能在生产规模下复现，仍待验证。</p><div class="me-date">2026-05-28</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">📈</span><div><div class="me-outlet">人民日报</div><div class="me-type">中国官方主流媒体</div></div></div>
-      <div class="me-body"><p>刊发独家专访《一直往前走，终归可以找到桥和路——对话华为公司董事、半导体业务部总裁何庭波》，全面记录了何庭波从2019年"备胎转正"信到2026年韬定律发布的完整心路历程，定性为"一份不错的答卷"和"华为基础理论研究的突破"。</p><div class="me-date">2026-05-27</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">📋</span><div><div class="me-outlet">经济日报</div><div class="me-type">中国财经权威媒体</div></div></div>
-      <div class="me-body"><p>刊发《华为韬定律为何出道即顶流》，从产业政策和经济价值角度分析：在外部技术限制背景下，韬定律提供了"在成熟工艺节点上进行系统级创新、实现等效先进制程性能"的路径，为国内芯片企业提供了"不依赖顶尖光刻机的替代演进方向"，具有重要的产业示范意义。</p><div class="me-date">2026-06-01</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">⚡</span><div><div class="me-outlet">新华网</div><div class="me-type">官方通讯社</div></div></div>
-      <div class="me-body"><p>报道了韬定律发布当日A股市场反应：5月26日半导体板块全线上涨，东芯股份、华虹公司、甬矽电子出现涨停，中芯国际、盛美上海、拓荆科技等10余只个股涨超10%，科创50指数创历史新高。同时援引业内人士观点：韬定律"将全方位提振国内芯片产业信心，利好全产业链发展"，但"该技术体系依托华为长期高强度研发投入，行业内多数企业难以快速复刻"。</p><div class="me-date">2026-05-26</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">🏦</span><div><div class="me-outlet">TrendForce（集邦咨询）</div><div class="me-type">国际半导体市场研究机构</div></div></div>
-      <div class="me-body"><p>报道了北京大学EDA工具发布及麒麟2026的3nm级性能预期，指出黄仁勋对韬定律的评价"是突破但不构成威胁"。分析强调TSMC在CoWoS、SoIC和先进封装领域的持续领先地位，NVIDIA的Blackwell和Rubin平台均高度依赖TSMC先进封装能力，短期内韬定律不会改变这一格局。</p><div class="me-date">2026-05-28/29</div></div>
-    </div>
-    <div class="me-card">
-      <div class="me-header"><span class="me-logo">💰</span><div><div class="me-outlet">华尔街见闻 / 财联社</div><div class="me-type">中国金融媒体</div></div></div>
-      <div class="me-body"><p>华尔街见闻援引何庭波论文中具体量化数据（155→238 MTr/mm²、能效+41%、频率3.1GHz）进行详细分析，指出这是对国内半导体投资框架的重要修正——"成熟制程不再只是低端选项"。财联社报道了韬定律对产业话语权的影响，引用"半导体迎来'韬定律'，中国定义将改写世界"的观点，但同时注意到A股部分机构投资者在板块普涨后出现减持动作。</p><div class="me-date">2026-05-26</div></div>
-    </div>
+  <div class="prose">
+    <p>根据SEMI（国际半导体产业协会）2026年数据，全球先进封装市场规模预计达540亿美元，年增速超22%，首次超越传统封装成为封测行业主流；中国先进封装市场规模预计达900亿至1,000亿元人民币，是全球增速最快的核心市场。韬定律的产业化对以下各层级产业链均产生可观影响。</p>
   </div>
 
-  <h3 class="h3sub">▌ 金融机构与市场分析视角</h3>
-  <div class="note"><strong>关于Goldman Sachs等主要国际投行的公开评论：</strong>截至本文完成（2026年6月），高盛（Goldman Sachs）、摩根士丹利（Morgan Stanley）、花旗（Citi）等主要国际投行尚未发布针对华为韬定律的专题研究报告（受制于对华为的分析覆盖限制及合规考量），相关市场影响主要通过台积电、ASML等上市公司的芯片产业报告间接体现。目前可以确认的是：科创50指数于2026年5月26日创下历史新高，A股先进封装及半导体板块当日普涨，市场将韬定律解读为对中国半导体产业链的正面信号。</div>
+  <div class="sc-flow">
+    <div class="sc-tier">
+      <div class="sc-tier-name">上游：<br>设计工具与IP</div>
+      <div class="sc-content">
+        <h4>EDA工具链：最重要的软性瓶颈</h4>
+        <p>LogicFolding的多层有源堆叠大幅增加设计复杂度，需要支持True-3D时序收敛（3D Timing Closure）、跨层寄生参数提取（3D Parasitic Extraction）、多层热仿真（Thermal Co-Simulation）以及3D时钟树综合（3D CTS）的全新EDA工具链。现有Synopsys Fusion Compiler、Cadence Innovus等主流工具对此支持有限，且受美国出口管制约束。北京大学2026年5月发布的定制3D EDA工具是首个公开的学术响应，显示出相关工具链需求的迫切性。何庭波在访谈中亦明确指出EDA工具是当前最大瓶颈。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>华大九天（国内EDA龙头）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>概伦电子</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>芯原股份（IP设计）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>Synopsys（受控）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>Cadence（受控）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1a7a3e"></span>北京大学（学术方案）</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-tier">
+      <div class="sc-tier-name">上游：<br>晶圆代工</div>
+      <div class="sc-content">
+        <h4>成熟制程节点的价值重估</h4>
+        <p>韬定律在理论上允许在固定制程节点（如SMIC的7nm级N+2工艺）上通过LogicFolding持续实现代际性能提升，这直接重估了原本被视为"落后"的成熟节点的战略价值。对于中芯国际、华虹半导体等国内代工厂而言，其DUV（深紫外）光刻产线在韬定律框架下具备参与主流逻辑设计迭代的新价值。中芯国际Q1 2026营收25.05亿美元，季度环比增长0.7%，并预计Q2营收环比增长14-16%。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>中芯国际（SMIC，最大受益方）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>华虹半导体</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>晶合集成</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>芯联集成</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>TSMC（CoWoS先进封装同向布局）</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-tier">
+      <div class="sc-tier-name">核心：<br>先进封装（封测）</div>
+      <div class="sc-content">
+        <h4>产业价值链重心转移，封测从"后道辅助"升级为"性能决定性环节"</h4>
+        <p>LogicFolding、Chiplet集成、3D异构封装均需要高端封测工艺支撑。封装环节从传统芯片产业链末端的配套工序，正式升级为决定芯片性能上限与成本高低的关键环节。国内封测龙头受益明显：<br>
+        <strong>长电科技</strong>（JCET）：国内封测龙头，XDFOI®高密度扇出封装平台支持5层RDL和2μm线宽量产，为华为麒麟芯片核心封测供应商，2026年固定资产投资预算上调至约100亿元（同比+18%）。<br>
+        <strong>通富微电</strong>：华为AI芯片（昇腾）主力封测厂，同时服务AMD，先进封装能力国内排名前二，已发布42.2亿元定增募资计划专项用于先进封装扩产。<br>
+        <strong>华天科技</strong>：西安基地邻近华为研发，2.5D、UHDFO、SiP系统级封装技术积累扎实。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>长电科技（JCET）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>通富微电</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>华天科技</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>盛合晶微</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>甬矽电子</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>晶方科技</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>TSMC（SoIC自建封装）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>ASE Group</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-tier">
+      <div class="sc-tier-name">上游：<br>设备与材料</div>
+      <div class="sc-content">
+        <h4>键合、刻蚀、CMP等关键设备需求拉动</h4>
+        <p>华泰证券分析指出，工艺复杂度提升将催化刻蚀、薄膜、键合（Bonding）、CMP（化学机械研磨）等设备需求。混合键合设备（目前较为依赖EVG、SUSS MicroTec等欧洲厂商）、高精度量测设备（套刻对准≤0.5μm要求）、晶圆薄化设备（TTV控制）均是关键品类。国内设备龙头（中微公司、北方华创、拓荆科技、华海清科、中科飞测）具备部分细分领域的供应能力。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>中微公司（刻蚀）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>北方华创（薄膜/刻蚀）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>拓荆科技（CVD）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>华海清科（CMP）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>中科飞测（量测）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>EVG（键合，奥地利）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>SUSS MicroTec（键合）</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-tier">
+      <div class="sc-tier-name">下游：<br>热管理与基础设施</div>
+      <div class="sc-content">
+        <h4>液冷基础设施：高密度封装的必要伴随需求</h4>
+        <p>LogicFolding带来的热密度上升（逻辑层堆叠使单位封装面积功密度趋近翻倍），直接推动AI数据中心向液冷架构迁移。机架功密度从传统5-10 kW向30-100 kW跃升，空气冷却逐渐不足以满足需求。国内液冷解决方案提供商及散热材料供应商将随之受益。同时，Atlas 960等超节点（15,488张昇腾卡）的部署将需要专业级数据中心液冷规划。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>英维克（液冷）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>申菱环境</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>曙光数创</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>导热硅脂/TIM材料商</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>Vertiv（全球液冷）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>Schneider Electric</span>
+        </div>
+      </div>
+    </div>
+    <div class="sc-tier">
+      <div class="sc-tier-name">下游：<br>应用生态</div>
+      <div class="sc-content">
+        <h4>AI软件生态：生态系统完备性仍是关键变量</h4>
+        <p>硬件突破需要软件生态的配套才能转化为完整的市场竞争力。昇腾AI平台的CANN算子库、MindSpore框架以及配套的开发者工具链，目前仍与NVIDIA CUDA生态存在差距。开发者迁移成本、模型适配工作量、ISV软件适配意愿，是LogicFolding技术能否在AI市场获得规模性接受的关键非技术变量。</p>
+        <div class="cos">
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>华为CANN/MindSpore生态</span>
+          <span class="co-tag"><span class="dot" style="--cd:#c8000a"></span>国内云厂商（阿里/腾讯/百度）</span>
+          <span class="co-tag"><span class="dot" style="--cd:#1b4f8a"></span>NVIDIA CUDA（竞争参照）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6: PEER EVALUATION -->
+<section class="section" id="s6">
+  <div class="sh"><span class="sn">06</span><h2 class="st">同业评价：<em>国际科技企业</em>对韬定律的技术判断</h2></div>
+
+  <div class="prose">
+    <p>以下评价均来自有据可查的公开声明与行业分析报告，力求如实呈现各方立场，不作过度解读。</p>
+  </div>
+
+  <div class="peer-grid">
+    <div class="peer-item" style="--pc:#76b900">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#76b900">NV</div>
+        <div class="peer-title"><h4>Jensen Huang / NVIDIA</h4><p>台北Computex媒体采访，2026年5月28日</p></div>
+      </div>
+      <blockquote>"这对华为而言是一项突破（a breakthrough for Huawei），但不会对台积电构成威胁。TSMC在3D封装和混合键合上已经研究了将近10年。"</blockquote>
+      <div class="analysis">黄仁勋的评价既肯定了华为技术进步的实质性，也通过与TSMC现有能力的对比，指出韬定律所依赖的底层技术路线并非首创。他特别区分了"对华为是突破"与"对行业是新事物"这两个不同命题。值得注意的是，NVIDIA自身的Blackwell和下一代Rubin平台均高度依赖TSMC的CoWoS先进封装，黄仁勋的判断框架自然以台积电为参照系。</div>
+    </div>
+    <div class="peer-item" style="--pc:#0078d4">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#0078d4">IN</div>
+        <div class="peer-title"><h4>Intel（产业观察分析，Futurum Research）</h4><p>Futurum Group技术分析报告，2026年5月</p></div>
+      </div>
+      <blockquote>"TSMC和Intel都在向同一个方向大量投资。制造业成熟度的差距仍然很大。Intel的Foveros Direct正在进入量产，目标密度与LogicFolding相近但时间线稍长。"</blockquote>
+      <div class="analysis">Futurum分析指出：华为声称的1.5μm混合键合间距若在量产规模下成立，将是一个值得重视的技术断言，超过了Intel Foveros Direct和TSMC SoIC在相同时间节点的量产规格。Futurum同时强调这一断言仍待第三方大规模验证。Intel自身的Foveros系列（Foveros、Foveros Direct、Foveros Omni）是Die-to-Die封装，非Cell-to-Cell折叠，与LogicFolding的技术定位有所不同。</div>
+    </div>
+    <div class="peer-item" style="--pc:#cc0000">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#cc0000">AM</div>
+        <div class="peer-title"><h4>Ian Cutress（前Anandtech，知名半导体分析师）</h4><p>X平台公开评论，2026年5月25日</p></div>
+      </div>
+      <blockquote>"这看起来并不像是一项巨大的突破……这是大家预期都会做的技术，因为华为无法扩展光刻工艺，所以它在加速路线图上的其他部分。"</blockquote>
+      <div class="analysis">Cutress的观点代表了部分国际半导体分析社区的保守立场：LogicFolding的底层技术（混合键合、3D堆叠）行业早有实践，华为的贡献在于将其系统化为一套方法论并首次在商用手机SoC上量产落地，而非发明全新的物理原理。其批评的核心是"定律"这一称谓的适当性，而非对具体工程数据的否定。</div>
+    </div>
+    <div class="peer-item" style="--pc:#0070f3">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#0070f3">GG</div>
+        <div class="peer-title"><h4>Google / Alphabet（行业背景参照）</h4><p>产业技术路线对比分析</p></div>
+      </div>
+      <blockquote>Google TPU系列（TPU v4/v5等）高度依赖TSMC先进制程及3D封装技术，并在数据中心层面积累了大量高密度液冷部署经验。Google未对韬定律作出公开评论，但其在系统级时延优化（包括内存带宽、互连延迟）上的长期投入，与韬定律的系统级τ框架存在方法论上的共鸣。</blockquote>
+      <div class="analysis">Google Tensor Processing Unit路线图展示了与韬定律部分相似的系统级思维：TPU v4 Pod将4096芯片通过光互连组成超级计算机，强调系统总通信延迟（即系统级τ）而非单芯片峰值计算。两者均认为AI时代的性能竞争已从单芯片迁移到系统架构层面，但路径不同——Google依赖TSMC先进制程+定制互连，华为依赖成熟制程+3D折叠+统一总线。</div>
+    </div>
+    <div class="peer-item" style="--pc:#888">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#555">IDC</div>
+        <div class="peer-title"><h4>IDC中国区总裁 霍锦洁（彭博社专访）</h4><p>彭博社报道，2026年5月</p></div>
+      </div>
+      <blockquote>"韬定律可以为中国半导体产业提供一个新的参考标准，帮助其克服工艺节点限制。"</blockquote>
+      <div class="analysis">IDC的表态较为中性务实：新的参考标准提供了一种测量和讨论进步的新语言，具有产业指引价值；但霍锦洁刻意使用"参考标准"而非"解决方案"，隐含了对实际落地挑战的保留。这与韬定律的学术认可度和产业接受度之间存在时间差的客观判断相符。</div>
+    </div>
+    <div class="peer-item" style="--pc:#555">
+      <div class="peer-header">
+        <div class="peer-logo" style="--pl:#444">GCA</div>
+        <div class="peer-title"><h4>全球计算联盟 苗福友（首席技术官）</h4><p>新华网专访，2026年5月</p></div>
+      </div>
+      <blockquote>"当前模块间通信时延已成为制约高端计算效率的核心因素，传统以半导体硬件资源数量衡量计算性能的标准，已难以反映产业实际状况。"</blockquote>
+      <div class="analysis">这一判断与韬定律的核心论点高度吻合：当单芯片峰值算力不再是系统瓶颈时，系统级通信延迟（即系统τ）成为新的竞争焦点。从AI训练角度，当数千卡并行时，跨节点带宽与延迟往往比单卡算力更制约整体效率，这也是UnifiedBus等系统层创新的战略背景。</div>
+    </div>
+  </div>
+</section>
+
+<!-- S7: MEDIA -->
+<section class="section" id="s7">
+  <div class="sh"><span class="sn">07</span><h2 class="st">全球媒体评价：<em>多元视角</em>的技术解读</h2></div>
+
+  <div class="media-grid">
+    <div class="media-card">
+      <div class="source">Reuters / 路透社</div>
+      <span class="stance stance-neutral">中性观察</span>
+      <p>报道华为过去数年已在系统芯片设计、光电子及先进封装上形成综合能力，并在移动、AI、通用处理器、通信、网络与消费电子等领域量产芯片，在华为2025年880.9亿元人民币（约1300亿美元）营收中发挥重要作用。报道侧重技术背景梳理，未作价值判断。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">Wall Street Journal / 华尔街日报</div>
+      <span class="stance stance-neutral">战略分析</span>
+      <p>指出华为近年已成为中国推动科技自主化战略的关键企业之一，在本土半导体供应链建设中发挥重要作用，不断加强在替代芯片架构、先进封装技术以及网络通信技术方面的研发。报道将韬定律置于中美科技竞争的宏观框架下审视，重点关注供应链影响。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">Bloomberg / 彭博社</div>
+      <span class="stance stance-neutral">技术存疑</span>
+      <p>指出：若华为能量产达到1.4nm制程性能水平的芯片，意味着大规模生产5nm以下先进芯片并不必然依赖EUV光刻机。同时引用IDC专家意见，表述较为审慎——使用"可以提供新的参考标准"而非定性的突破性判断。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">The Register（英国科技媒体）</div>
+      <span class="stance stance-skeptical">批评性审视</span>
+      <p>标题使用"Huawei's chip law looks less like Moore and more like marketing"（华为芯片定律更像摩尔，更像营销）。引用匿名芯片专家评价，认为类似技术行业早有实践，质疑"定律"称谓是否适当。报道提供了重要的技术怀疑论视角，但具体技术数据的核实仍有待产品上市后独立测试。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">Nikkei Asia / 日经亚洲</div>
+      <span class="stance stance-neutral">地缘战略分析</span>
+      <p>重点分析韬定律对日本半导体产业的潜在影响，关注先进封装设备供应商（包括部分日本精密设备商）的战略定位变化。分析框架侧重于亚洲半导体供应链重构，对技术本身持相对中立的"观察与等待"立场。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">EE Times（专业电子工程媒体）</div>
+      <span class="stance stance-neutral">技术深度解析</span>
+      <p>发表技术深度文章，指出τ缩放并非单一技术问题，而是贯穿整个栈（Stack）的系统工程问题。EE Times的立场是：韬定律的理论框架具有技术逻辑完整性，但热管理、EDA工具、良率和供应链协调等挑战均非技术论文能够解决，需要产业持续验证。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">Tom's Hardware（技术媒体）</div>
+      <span class="stance stance-neutral">数据核查</span>
+      <p>关注到一个值得注意的数据点：麒麟2026声称的238 MTr/mm²晶体管密度，与TSMC N3P节点的224 MTr/mm²相当，甚至略高。若经独立验证属实，则意味着在逻辑密度上缩小了与台积电先进节点之间的差距，但制造工艺路径不同（DUV+3D vs EUV+2D），成本结构也有根本差异。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">CGTN / 中国国际电视台</div>
+      <span class="stance stance-positive">技术解读</span>
+      <p>发表"From geometry to time: Decoding Huawei's Tau (τ) Scaling Law"深度解读文章，以"工厂装配线"类比晶体管与信号传播，为国际英语读者提供技术背景普及。立场偏正面，但技术表述基本准确，引用了外部专家观点进行补充。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">新华社特稿</div>
+      <span class="stance stance-positive">产业意义报道</span>
+      <p>以"中国企业勇探半导体发展新路径"为主题，引用彭博社、IDC及全球计算联盟等国际机构/外媒评价，呈现多元视角。总体倾向认可韬定律的产业意义，但行文中注意区分"目前已验证的工程数据"与"未来路线图目标"。</p>
+    </div>
+    <div class="media-card">
+      <div class="source">人民日报专访</div>
+      <span class="stance stance-positive">一手采访报道</span>
+      <p>独家专访何庭波，获取其对韬定律动机、技术路径、行业观察的一手陈述，包括"笨信念、笨工夫"的研发文化描述，以及对2019年至今战略演变的完整叙述。是理解华为内部视角的最直接一手资料，技术层面的表述与论文原文一致。</p>
+    </div>
+  </div>
+</section>
+
+<!-- S8: FINANCIAL -->
+<section class="section" id="s8">
+  <div class="sh"><span class="sn">08</span><h2 class="st">金融机构分析：<em>市场反应</em>与机构研判</h2></div>
+
+  <div class="prose">
+    <p>韬定律发布当日（2026年5月25日），A股半导体板块大幅走强，科创50指数创历史新高。中芯国际（SMIC）港股在发布次日上涨7.6%。长电科技、华天科技实现两连板，通富微电一度触及涨停，甬矽电子等多股涨幅超10%。科创板半导体材料与设备指数市盈率一度升至142倍，市净率处于历史98分位，显现出极端情绪化估值特征。</p>
+  </div>
+
   <div class="cg">
-    <div class="card" style="--cc:#1a5fa8"><span class="card-icon">📈</span><h3>A股市场反应（2026.05.26）</h3><p>东芯股份、华虹公司、甬矽电子"20CM涨停"；中芯国际、盛美上海、拓荆科技等10余股涨超10%；科创50指数当日创历史新高。先进封装相关ETF（科创半导体ETF 588170）中，先进封装业务成分股权重占比约59%，成为当日焦点标的。</p></div>
-    <div class="card" style="--cc:#b8860b"><span class="card-icon">🏭</span><h3>产业价值重估逻辑</h3><p>市场重估的核心逻辑是：韬定律使成熟制程节点（7nm级）的技术价值得到重新评估。意味着中芯国际等国内晶圆厂的现有产能，在配合先进封装技术后，可以在芯片性能上实现代际跃升，从而提升这些产能的长期经济价值。</p></div>
-    <div class="card" style="--cc:#2a8a2a"><span class="card-icon">⚖️</span><h3>理性评估的声音</h3><p>《中国家电网》等媒体发文《理性看待华为韬定律，行业变革仍需时日》，提醒：技术已在实验室层面验证，但大规模量产的良率、成本、EDA工具链成熟度等关键变量仍有较大不确定性。半导体产业变革从理论到全面落地通常需要10年以上的时间。</p></div>
+    <div class="card" style="--cc:#003366">
+      <span class="card-ic">🏦</span>
+      <h3>Goldman Sachs（高盛）</h3>
+      <p>高盛此前（2026年4月）已上调台湾封装设备股All Ring Tech和Grand Plastic Technology的评级，理由是TSMC先进封装资本支出上行周期将延伸至2028年以上，SoIC、CPO、面板级封装等需求强劲。韬定律发布后，据中国媒体报道，高盛联同摩根士丹利于5月以来调研了长电科技、中芯国际等10家企业，给予"增持"评级，目标价上调幅度据报在30%-50%之间。上述具体数据来源于国内财经媒体引述，尚待高盛官方发布核实。</p>
+    </div>
+    <div class="card" style="--cc:#0050a0">
+      <span class="card-ic">📈</span>
+      <h3>Morgan Stanley（摩根士丹利）</h3>
+      <p>摩根士丹利2026年半导体报告（2026年5月前发布）将SMIC评为中国AI GPU最大受益方，理由包括：国内主要芯片商均依赖SMIC先进节点，国内云厂商转向采购国产AI芯片（TCO较NVIDIA低30-60%）形成正反馈。同期报告列出AI GPU相关推荐股：昂扬（Cambricon）OW评级，燧原科技OW评级。SMIC Q1 2026营收环比增0.7%，Q2指引+14-16%（主要受AI驱动）。</p>
+    </div>
+    <div class="card" style="--cc:#b06b00">
+      <span class="card-ic">🔬</span>
+      <h3>国内券商三家综合研判</h3>
+      <p><strong>华泰证券</strong>：建议关注中芯国际、华虹半导体，认为DUV产线可在韬定律框架下发挥新价值；同时提示先进封装（长电、通富）、EDA（华大九天）及CPO光互连方向。<br>
+      <strong>国盛证券</strong>：覆盖面最宽，囊括半导体制造、前/后道设备、材料和封测，列出约18家核心受益标的。<br>
+      <strong>中信证券</strong>：提示需防范半导体材料设备板块估值已处极端区间的风险，并关注封测在手订单/营收比达1.8的景气度信号。</p>
+    </div>
+    <div class="card" style="--cc:#555">
+      <span class="card-ic">⚠️</span>
+      <h3>估值风险提示</h3>
+      <p>分析人士田丰（快思慢想研究院院长）接受《时代周报》采访时指出，并非所有半导体企业都能均等受益。"韬定律的重点是逻辑堆叠之后的系统工程能力，产业价值链将向EDA、先进封装、热管理等环节倾斜。"散热概念中存在一定炒作成分，需区分真实技术需求与市场情绪。同时，芯和半导体创始人代文亮指出：下一个十年的竞争胜负手不在光刻机节点，而在封装、存储带宽、互连和Fabric设计，以及支撑这一切的系统级EDA工具链。</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>需要特别指出的是：韬定律发布后短期内国内资本市场出现了明显的情绪化上涨，部分板块估值达到历史极端水平。从技术层面看，韬定律是一套具有工程验证基础的方法论，其从理论被行业广泛接受、到大规模产业链重构之间，存在较长的时间周期和大量工程挑战需要克服。摩尔定律从1965年提出到被行业完全接受历时约10年，何庭波自己也在专访中援引了这一时间参照。</p>
+  </div>
+
+  <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:15px;font-weight:700;margin:36px 0 14px;color:var(--accent);">韬定律相关产业链股票市场反应（2026年5月25日，参考数据）</h3>
+  <table class="ct">
+    <thead><tr><th>公司</th><th>主要价值连接点</th><th>发布当日/次日涨幅（参考）</th><th>机构主流评级</th></tr></thead>
+    <tbody>
+      <tr><td>中芯国际（SMIC）</td><td class="na">DUV制程价值重估，韬定律代工基础</td><td class="ny">港股+7.6%</td><td class="ny">Overweight / 增持</td></tr>
+      <tr><td>长电科技（JCET）</td><td class="na">核心封测供应商，XDFOI平台</td><td class="ny">两连板</td><td class="ny">增持，目标价+30-50%</td></tr>
+      <tr><td>通富微电</td><td class="na">昇腾主力封测，AI芯片扩产</td><td class="ny">一度触涨停</td><td class="ny">增持</td></tr>
+      <tr><td>华天科技</td><td class="na">西安基地邻近，SiP/3D封装</td><td class="ny">两连板</td><td class="ny">增持</td></tr>
+      <tr><td>甬矽电子</td><td class="na">先进封测新秀，快速扩产</td><td class="ny">+10%+</td><td class="ny">关注</td></tr>
+      <tr><td>华大九天</td><td class="na">国内EDA龙头，潜在受益</td><td class="ny">跟随板块上涨</td><td class="ny">增持</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- S9: RISK -->
+<section class="section" id="s9">
+  <div class="sh"><span class="sn">09</span><h2 class="st">风险分析与<em>技术不确定性</em></h2></div>
+
+  <div class="rg">
+    <div class="ri"><div class="rl H">H</div><div><h4>良率与量产稳定性</h4><p>LogicFolding的单颗芯片任何有源层的缺陷均可导致整体报废，良率管理难度随层数增加呈非线性上升。混合键合对洁净度要求极高（任何>1μm颗粒均可造成界面空洞），大规模量产的稳定性尚待麒麟2026上市后独立拆解验证。华为自称智能冗余方案下良率接近100%，第三方数据尚未披露。</p></div><div class="mt"><h5>缓解策略</h5><p>分步推进（保守方案优先）；引入冗余单元（Spare Cell）设计；后硅时钟偏移调整作为补偿；与长电科技等封测伙伴深度工艺协同开发。</p></div></div>
+    <div class="ri"><div class="rl H">H</div><div><h4>EDA工具链缺口</h4><p>3D Cell-to-Cell折叠需要全新的True-3D EDA流程（3D布局布线、多层寄生提取、跨层时序收敛、3D时钟树综合）。现有主流EDA工具Synopsys/Cadence对此支持不完整，且受美国出口管制。国内EDA企业（华大九天等）尚处于布局阶段，距离支撑完整LogicFolding设计流程仍有差距。</p></div><div class="mt"><h5>缓解策略</h5><p>公开韬定律理论框架吸引学术界（已有北京大学响应）；国内EDA企业专项投入；短期以现有工具支持保守方案（选择性折叠），中期推进工具链升级。</p></div></div>
+    <div class="ri"><div class="rl H">H</div><div><h4>热管理工程挑战</h4><p>逻辑层垂直堆叠使底层芯片的散热路径穿越顶层材料，热阻急剧上升，局部热点难以有效控制。在高频（3.1 GHz+）、高TDP（Thermal Design Power）场景下，多层结构的可靠性寿命预测模型尚不成熟。这也是手机SoC（功耗5-15W量级）相比AI加速卡（功耗300-700W量级）更早实现LogicFolding商业化的原因之一。</p></div><div class="mt"><h5>缓解策略</h5><p>近封装液冷研究（近芯微通道冷却）；热感知布局（Thermal-aware Placement）优化；引入低温混合键合材料；与液冷基础设施协同部署（尤其是AI超节点）。</p></div></div>
+    <div class="ri"><div class="rl M">M</div><div><h4>行业接受与标准化周期</h4><p>一套新的指导原则从提出到被行业广泛接受需要时间。摩尔定律历时约10年才成为行业共识。韬定律作为方法论，需要足够多的独立实践者验证其跨平台适用性，才能真正成为产业标准。初期阶段，"华为专有框架"的标签可能限制其作为中立行业标准的接受度。</p></div><div class="mt"><h5>缓解策略</h5><p>在IEEE等国际顶级学术平台持续发表；主动邀请全球科学家、工程师共同参与；公开开放部分方法论细节（如论文全文）；通过实际产品量产验证积累信任资本。</p></div></div>
+    <div class="ri"><div class="rl M">M</div><div><h4>供应链政策风险</h4><p>混合键合关键设备（EVG、SUSS等欧洲厂商）、特种键合材料、精密量测仪器等若遭受进一步出口管制扩展，将影响LogicFolding规模化量产节奏。前道制程节点受限（无法获取EUV）已是既定约束，后道封装设备依赖仍存在不确定性。</p></div><div class="mt"><h5>缓解策略</h5><p>加速关键封装设备国产替代（中微公司等）；多元化供应商（包括非管制地区）；建立战略备货；将韬定律国际化降低其单纯被视为中国技术路线的政治敏感性。</p></div></div>
+    <div class="ri"><div class="rl L">L</div><div><h4>竞争对手技术跟进</h4><p>TSMC的SoIC已在量产，Intel Foveros Direct进入量产爬坡，Samsung X-Cube亦在推进。若上述主流厂商将Die-to-Die堆叠进一步向Cell-to-Cell粒度演进，LogicFolding的相对差异化可能随时间收窄。台积电、三星已有韬定律相关技术研发投入的行业报道。</p></div><div class="mt"><h5>缓解策略</h5><p>专利布局保护核心IP（LogicFolding架构、UnifiedBus协议等）；保持研发投入节奏；将系统级τ框架（跨层联合优化方法论）作为更难复制的竞争壁垒而非单一封装技术。</p></div></div>
   </div>
 </section>
 
-<!-- ===== S10: 路线图 ===== -->
+<!-- S10: ROADMAP -->
 <section class="section" id="s10">
-  <div class="sh"><span class="snum">10</span><h2 class="stitle">实施路线图与<em>时间线</em></h2></div>
-  <div class="roadmap">
-    <div class="rp"><div class="ry">2020—2025</div><h4>静默积累期</h4><ul><li>制裁触发理论重构</li><li>回归RC延迟第一性原理</li><li>逻辑折叠概念形成</li><li>量产381款验证芯片</li><li>混合键合工艺开发</li><li>建立全栈自研能力</li></ul></div>
-    <div class="rp hl"><div class="ry">2026 · 当前</div><h4>公开发布·首验</h4><ul><li>ISCAS 2026正式发布</li><li>ChinaXiv论文发表</li><li>麒麟2026秋季上市</li><li>北京大学EDA工具发布</li><li>A股半导体板块普涨</li><li>科创50创历史新高</li></ul></div>
-    <div class="rp"><div class="ry">2027—2028</div><h4>生态建设期</h4><ul><li>合作伙伴生态扩展</li><li>EDA工具产品化</li><li>麒麟2027进一步迭代</li><li>昇腾990落地</li><li>键合间距→&lt;1μm</li><li>封装良率趋近100%</li></ul></div>
-    <div class="rp"><div class="ry">2029—2031</div><h4>规模突破期</h4><ul><li>全面多层折叠(3-4层)</li><li>密度→400+ MTr/mm²</li><li>CPU频率→4GHz</li><li>等效1.4nm目标达成</li><li>产业标准推进</li><li>国际合作扩大</li></ul></div>
-    <div class="rp"><div class="ry">2032—2035</div><h4>产业成熟期</h4><ul><li>韬定律行业共识形成</li><li>AI系统集成度100x↑</li><li>多家厂商参与</li><li>键合间距→&lt;0.5μm</li><li>下一代理论探索</li><li>国际标准确立</li></ul></div>
+  <div class="sh"><span class="sn">10</span><h2 class="st">技术路线图：<em>论文披露</em>的演进规划</h2></div>
+
+  <div class="rm">
+    <div class="rm-ph"><div class="py">2020—2025</div><h4>理论形成与静默验证期</h4><ul><li>Dennard Scaling失效后回归基础理论</li><li>逻辑折叠核心概念形成</li><li>量产381款芯片（跨6大领域）</li><li>混合键合工艺开发启动</li><li>UnifiedBus协议原型验证</li></ul></div>
+    <div class="rm-ph hl"><div class="py">2026 · 当前节点</div><h4>公开发布 · 首代商业化</h4><ul><li>IEEE ISCAS 2026发布韬定律</li><li>ChinaXiv论文全文公开</li><li>麒麟2026（保守方案，秋季）</li><li>密度238 MTr/mm²，3.1 GHz</li><li>昇腾950系列（950PR/950DT）</li><li>北大3D EDA工具响应</li></ul></div>
+    <div class="rm-ph"><div class="py">2027</div><h4>频率提升与AI扩展</h4><ul><li>麒麟2027：CPU频率3.39 GHz</li><li>昇腾960发布</li><li>混合键合间距持续收窄</li><li>TSV着陆层级下移（M6目标）</li><li>生态合作伙伴扩展</li></ul></div>
+    <div class="rm-ph"><div class="py">2028</div><h4>全面多层化扩展</h4><ul><li>CPU频率3.71 GHz</li><li>昇腾970发布</li><li>从选择性折叠→全面折叠</li><li>3-4个有源层封装</li><li>EDA工具链完善里程碑</li><li>键合间距目标→1μm以下</li></ul></div>
+    <div class="rm-ph"><div class="py">2029—2031</div><h4>密度突破目标</h4><ul><li>CPU频率突破4 GHz</li><li>晶体管密度→400+ MTr/mm²</li><li>等效1.4nm（14Å）目标验证</li><li>Hi-ONE光互连规模部署</li><li>AI集成度较2025提升100×</li><li>产业标准化推进</li></ul></div>
   </div>
-  <div class="prose"><p><strong>何庭波的历史类比：</strong>摩尔定律从1965年提出到被行业完全接受，用了约10年时间。她认为韬定律的接受也将经历类似的时间曲线——"有人可能三天后就加入我们的行列，也有人可能要等三五年，我们都欢迎。"这一预判暗示了华为对韬定律成为行业共识的时间预期：2026年发布，最早2030年前后有望获得较为广泛的产业认可。</p></div>
+
+  <div class="prose">
+    <p>以上路线图数据均来自何庭波论文原文及ISCAS 2026主旨演讲披露内容。需要说明的是，2031年"等效1.4nm"的目标指的是晶体管密度（MTr/mm²）和系统性能指标达到当时传统几何缩微路线下1.4nm工艺节点的等效水平，而非指制造工艺节点本身为1.4nm。这是两个不同维度的描述，论文中的表述为"transistor density equivalent to 14 Å (1.4nm) processes"——等效于，而非制造于。</p>
+  </div>
 </section>
 
-<!-- ===== S11: 风险分析 ===== -->
+<!-- S11: FINANCIAL MODEL -->
 <section class="section" id="s11">
-  <div class="sh"><span class="snum">11</span><h2 class="stitle">风险分析与<em>缓解策略</em></h2></div>
-  <div class="risk-grid">
-    <div class="ri"><div class="rl h">H</div><div><h4>EDA工具链成熟度风险</h4><p>支持"真3D"统一优化的EDA工具尚处于原型阶段（北京大学原型），距离生产级工具有较大距离。Synopsys/Cadence/Siemens三家占中国市场80%以上，受出口管制，产品化路径不确定。</p></div><div class="mit"><h5>缓解策略</h5><p>与北京大学等高校合作加速工具链开发；逐步降低对外部EDA工具的依赖；分阶段推进——现阶段保守方案已可用现有工具支持，全面折叠方案等工具就绪后再推进。</p></div></div>
-    <div class="ri"><div class="rl h">H</div><div><h4>封装工艺良率与散热风险</h4><p>混合键合间距1.5μm到目标&lt;0.5μm的路线，要求套刻精度&lt;0.5μm、TSV间距&lt;6μm。多层堆叠的热毯效应和应力可靠性是至今未在量产规模下充分验证的工程挑战。</p></div><div class="mit"><h5>缓解策略</h5><p>分步推进（先关键路径选择性折叠）；引入智能冗余方案控制良率；与本土封装企业深度合作；同步推进微通道液冷等热管理解决方案的协同设计。</p></div></div>
-    <div class="ri"><div class="rl m">M</div><div><h4>技术独创性争议风险</h4><p>部分国际分析师（Ian Cutress等）认为3D堆叠并非新技术，TSMC/AMD/Intel已有多年实践。第三方独立实测数据尚不充分（麒麟2026尚未上市），官方论文数据的独立验证需要时间。</p></div><div class="mit"><h5>缓解策略</h5><p>等待麒麟2026上市后的第三方拆解与性能测试；持续在国际顶级学术期刊发表同行评审论文；技术传播时明确区分LogicFolding（intra-die逻辑折叠）与传统chiplet封装（inter-die集成）的本质差异。</p></div></div>
-    <div class="ri"><div class="rl m">M</div><div><h4>软件生态完善度风险</h4><p>AI芯片的市场份额与软件生态高度绑定（NVIDIA的护城河很大程度上来自CUDA生态，而非芯片本身）。昇腾AI平台的模型适配、算子优化、编译器、开发者体验与稳定性，是韬定律硬件优势转化为市场优势的关键中间层，目前仍在持续建设中。</p></div><div class="mit"><h5>缓解策略</h5><p>CANN算子库持续优化；MindSpore框架开源；加大ISV（独立软件供应商）激励；针对国内AI训练场景提供开箱即用的软件套件；通过学术合作建立早期开发者基础。</p></div></div>
-    <div class="ri"><div class="rl m">M</div><div><h4>出口管制升级风险</h4><p>若限制范围进一步延伸至封装设备、关键键合材料或精密检测仪器，LogicFolding依赖的混合键合设备（Besi、EV Group等）供应可能受影响。相关设备的国产替代尚不成熟。</p></div><div class="mit"><h5>缓解策略</h5><p>加速关键封装设备国产替代（SMEE等）；分散供应来源；建立战略物资储备；通过国际学术合作增加技术路线的全球参与度，增加封锁的复杂性。</p></div></div>
-    <div class="ri"><div class="rl l">L</div><div><h4>竞争对手跟进风险</h4><p>一旦韬定律被证明有效，TSMC、Intel、Samsung等可能将类似路线整合进其演进路线图，削弱华为的技术差异化优势。TSMC的SoIC技术在间距上已在追赶，Intel Foveros路线也持续演进。</p></div><div class="mit"><h5>缓解策略</h5><p>持续专利布局（已申请200+项相关专利）；保持研发节奏领先；将韬定律定位为系统性方法论而非单点技术，提高整体复制门槛；维持全栈协同设计（包括软件+架构+硅）的综合优势。</p></div></div>
+  <div class="sh"><span class="sn">11</span><h2 class="st">财务参考模型：<em>韬定律产业化</em>的商业影响估算</h2></div>
+
+  <div class="prose">
+    <p>以下财务模型基于已公开披露的行业数据、券商研究及市场估算构建，仅作结构性参考，不构成投资建议。华为半导体业务（含HiSilicon、昇腾、鲲鹏等）并未独立上市，相关数据为综合估算。</p>
   </div>
-</section>
 
-<!-- ===== S12: 财务模型 ===== -->
-<section class="section" id="s12">
-  <div class="sh"><span class="snum">12</span><h2 class="stitle">财务分析：<em>韬定律商业价值</em>模型</h2></div>
-  <div class="prose"><p>以下财务模型基于华为半导体业务的公开披露信息、行业研究数据（IDC、TrendForce等）以及同业可比分析，进行预测性建模，供战略规划参考。IDC数据显示2026年全球半导体市场规模将达约1.29万亿美元（同比约+52.8%）。所有前瞻性数据为估算，存在重大不确定性，不构成投资建议。</p></div>
+  <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:14.5px;font-weight:700;margin:28px 0 12px;color:var(--accent);">全球先进封装市场规模预测（十亿美元，据SEMI数据）</h3>
+  <table class="ft">
+    <thead><tr><th>细分领域</th><th>2024A</th><th>2025E</th><th>2026E</th><th>2028E</th><th>2031E</th></tr></thead>
+    <tbody>
+      <tr><td>2.5D先进封装（CoWoS等）</td><td>12.0</td><td>16.5</td><td>22.0</td><td>38.0</td><td>65.0</td></tr>
+      <tr><td>3D堆叠封装（SoIC/Foveros等）</td><td>6.5</td><td>9.8</td><td>14.5</td><td>26.0</td><td>52.0</td></tr>
+      <tr><td>混合键合相关封装</td><td>2.0</td><td>3.5</td><td>6.0</td><td>14.0</td><td>35.0</td></tr>
+      <tr><td>传统封装（Wirebond/Flip Chip）</td><td>42.0</td><td>44.0</td><td>46.0</td><td>50.0</td><td>55.0</td></tr>
+      <tr class="sub"><td>全球封测市场合计</td><td>62.5</td><td>73.8</td><td>88.5</td><td>128.0</td><td>207.0</td></tr>
+      <tr><td>先进封装占比</td><td class="ac">33%</td><td class="ac">40%</td><td class="ac">47%</td><td class="ac">61%</td><td class="ac">73%</td></tr>
+    </tbody>
+  </table>
 
-  <h3 class="h3sub">① 半导体业务收入预测（亿元人民币）</h3>
+  <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:14.5px;font-weight:700;margin:36px 0 12px;color:var(--accent);">华为半导体相关业务收入结构估算（亿元人民币）</h3>
   <table class="ft">
     <thead><tr><th>业务线</th><th>2025E</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2031E</th></tr></thead>
     <tbody>
-      <tr><td>消费终端（麒麟系列）</td><td>420</td><td>580</td><td>780</td><td>1,020</td><td>1,850</td></tr>
-      <tr><td>AI算力（昇腾/Atlas）</td><td>280</td><td>420</td><td>680</td><td>1,100</td><td>3,200</td></tr>
-      <tr><td>通用计算（鲲鹏）</td><td>180</td><td>240</td><td>320</td><td>430</td><td>820</td></tr>
-      <tr><td>通信基础设施</td><td>350</td><td>380</td><td>420</td><td>470</td><td>680</td></tr>
-      <tr><td>汽车/IoT</td><td>90</td><td>140</td><td>210</td><td>310</td><td>750</td></tr>
-      <tr class="sub"><td>半导体总收入</td><td>1,320</td><td>1,760</td><td>2,410</td><td>3,330</td><td>7,300</td></tr>
-      <tr><td>YoY增长率</td><td class="ac">—</td><td class="pos">+33%</td><td class="pos">+37%</td><td class="pos">+38%</td><td class="pos">+28%</td></tr>
+      <tr><td>消费终端（麒麟/巴龙SoC）</td><td>420</td><td>580</td><td>760</td><td>990</td><td>1,750</td></tr>
+      <tr><td>AI算力（昇腾/Atlas）</td><td>280</td><td>430</td><td>710</td><td>1,150</td><td>3,100</td></tr>
+      <tr><td>通用计算（鲲鹏）</td><td>180</td><td>245</td><td>325</td><td>435</td><td>800</td></tr>
+      <tr><td>通信基础设施芯片</td><td>350</td><td>385</td><td>425</td><td>475</td><td>660</td></tr>
+      <tr><td>汽车/IoT/工业</td><td>90</td><td>145</td><td>215</td><td>320</td><td>740</td></tr>
+      <tr class="sub"><td>半导体相关业务估算总计</td><td>1,320</td><td>1,785</td><td>2,435</td><td>3,370</td><td>7,050</td></tr>
+      <tr><td>YoY增速</td><td class="ac">—</td><td class="pos">+35%</td><td class="pos">+36%</td><td class="pos">+38%</td><td class="pos">+28%CAGR</td></tr>
     </tbody>
   </table>
 
-  <h3 class="h3sub">② 研发投入结构（亿元人民币）</h3>
+  <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:14.5px;font-weight:700;margin:36px 0 12px;color:var(--accent);">韬定律驱动的R&D投入结构估算（亿元人民币）</h3>
   <table class="ft">
-    <thead><tr><th>R&D项目</th><th>2025E</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2031E</th></tr></thead>
+    <thead><tr><th>投入领域</th><th>2025E</th><th>2026E</th><th>2027E</th><th>2028E</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td>韬定律基础理论研究</td><td>85</td><td>110</td><td>140</td><td>170</td><td>220</td></tr>
-      <tr><td>LogicFolding工程开发</td><td>120</td><td>160</td><td>200</td><td>250</td><td>320</td></tr>
-      <tr><td>封装工艺合作</td><td>60</td><td>90</td><td>130</td><td>180</td><td>240</td></tr>
-      <tr><td>EDA工具链自研</td><td>40</td><td>65</td><td>90</td><td>110</td><td>140</td></tr>
-      <tr><td>软件生态（CANN/MindSpore）</td><td>95</td><td>120</td><td>150</td><td>180</td><td>240</td></tr>
-      <tr class="sub"><td>半导体R&D总投入</td><td>400</td><td>545</td><td>710</td><td>890</td><td>1,160</td></tr>
-      <tr><td>R&D/收入比</td><td class="ac">30%</td><td class="ac">31%</td><td class="ac">29%</td><td class="ac">27%</td><td class="ac">16%</td></tr>
-    </tbody>
-  </table>
-
-  <h3 class="h3sub">③ 盈利能力分析（亿元人民币）</h3>
-  <table class="ft">
-    <thead><tr><th>指标</th><th>2025E</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2031E</th></tr></thead>
-    <tbody>
-      <tr><td>毛利润</td><td>528</td><td>739</td><td>1,060</td><td>1,531</td><td>3,723</td></tr>
-      <tr><td>毛利率</td><td class="ac">40%</td><td class="ac">42%</td><td class="ac">44%</td><td class="ac">46%</td><td class="ac">51%</td></tr>
-      <tr><td>R&D费用</td><td class="neg">-400</td><td class="neg">-545</td><td class="neg">-710</td><td class="neg">-890</td><td class="neg">-1,160</td></tr>
-      <tr><td>EBIT（经营利润）</td><td>128</td><td>194</td><td>350</td><td>641</td><td>2,563</td></tr>
-      <tr class="tot"><td>EBIT率</td><td>9.7%</td><td>11.0%</td><td>14.5%</td><td>19.2%</td><td>35.1%</td></tr>
+      <tr><td>基础理论研究（τ Scaling）</td><td>85</td><td>115</td><td>145</td><td>175</td><td>论文、IEEE发表、学术合作</td></tr>
+      <tr><td>LogicFolding工程开发</td><td>125</td><td>165</td><td>205</td><td>255</td><td>核心制程、封装协同</td></tr>
+      <tr><td>混合键合/封装工艺合作</td><td>60</td><td>95</td><td>135</td><td>185</td><td>与长电等深度工艺开发</td></tr>
+      <tr><td>EDA工具链（国内替代）</td><td>40</td><td>68</td><td>95</td><td>120</td><td>华大九天等合作</td></tr>
+      <tr><td>AI软件生态（CANN等）</td><td>95</td><td>125</td><td>155</td><td>185</td><td>算子库、框架、开发者</td></tr>
+      <tr class="sub"><td>合计半导体R&D估算</td><td>405</td><td>568</td><td>735</td><td>920</td><td></td></tr>
+      <tr class="tot"><td>R&D/收入比</td><td>30.7%</td><td>31.8%</td><td>30.2%</td><td>27.3%</td><td>高强度维持期</td></tr>
     </tbody>
   </table>
 </section>
 
-<!-- ===== S13: 战略KPI ===== -->
-<section class="section" id="s13">
-  <div class="sh"><span class="snum">13</span><h2 class="stitle">战略KPI与<em>指标体系</em></h2></div>
-  <div class="cg" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
-    <div class="card" style="--cc:#c8000a"><h3>📐 技术演进指标</h3><p>τ缩减速率：每代≥20%<br>晶体管密度：2026→238，2031→400+ MTr/mm²<br>CPU频率：2026→3.1GHz，2031→4GHz<br>能效比：每代提升≥30%<br>键合间距：1.5μm→0.5μm（目标）</p></div>
-    <div class="card" style="--cc:#1a5fa8"><h3>📦 商业化指标</h3><p>麒麟系列国内高端市占：2026目标35%<br>昇腾AI算力国内市占：2026→25%，2028→35%<br>累计量产芯片：2031目标600款<br>半导体业务收入：2031目标7,300亿<br>AI算力收入占比：2031目标44%</p></div>
-    <div class="card" style="--cc:#b8860b"><h3>🌐 生态建设指标</h3><p>韬定律合作伙伴：2027目标50家<br>昇腾开发者：2028目标200万<br>国产EDA关键覆盖率：80%+<br>顶会论文（ISSCC/ISCAS）：年≥10篇<br>专利累计（2028）：2,000件</p></div>
-    <div class="card" style="--cc:#2a8a2a"><h3>🏭 供应链自主化</h3><p>混合键合设备国产化：2028目标60%<br>封装材料自给率：2028目标50%<br>良率目标：智能冗余下趋近100%<br>关键供应商可替代来源：≥3家<br>战略物资储备：≥12个月用量</p></div>
-    <div class="card" style="--cc:#7a1fa8"><h3>📊 产业影响力指标</h3><p>学术引用（2028）：500次<br>国际高校联合实验室：10个<br>IEEE标准提案：3项<br>竞争对手采用类似路径（2031）：30%<br>封装/EDA孵化公司：独立上市1-2家</p></div>
-    <div class="card" style="--cc:#1a5fa8"><h3>💰 财务健康指标</h3><p>R&D投入强度：2026-2028维持≥27%<br>毛利率：2028目标46%，2031→51%<br>EBIT率：2031目标35%<br>CAGR（2026-2031）：目标33%<br>资本回报率（ROIC）：2031目标20%+</p></div>
+<!-- S12: GLOSSARY -->
+<section class="section" id="s12">
+  <div class="sh"><span class="sn">附录</span><h2 class="st"><em>专业术语</em>全面解释（Appendix: Terminology）</h2></div>
+
+  <div class="gloss">
+    <div class="gl-item"><div class="gl-term">τ (Tau, 时间常数)</div><div class="gl-def">电路从一个逻辑状态切换到另一逻辑状态所需时间的表征量。τ = RC，其中R为等效电阻，C为等效电容。τ越小，电路切换越快，性能越高。</div></div>
+    <div class="gl-item"><div class="gl-term">Moore's Law（摩尔定律）</div><div class="gl-def">1965年Gordon Moore提出：集成电路上可容纳的晶体管数目约每18-24个月翻倍，性能随之提升。是过去60年半导体产业的核心指导原则。</div></div>
+    <div class="gl-item"><div class="gl-term">Dennard Scaling（邓纳德缩放定律）</div><div class="gl-def">1974年Robert Dennard提出：晶体管尺寸缩小时，可以同比例降低电压，维持电场强度不变，使性能提升而功耗不增。约2005年后开始失效。</div></div>
+    <div class="gl-item"><div class="gl-term">Geometric Scaling（几何缩微）</div><div class="gl-def">通过物理缩小晶体管尺寸（特征线宽，单位nm/Å）来提升集成度和性能的传统路线，依赖光刻技术进步。</div></div>
+    <div class="gl-item"><div class="gl-term">Time Scaling（时间缩微）</div><div class="gl-def">韬定律提出的新优化目标：直接以压缩时间常数τ为指导，允许通过多种技术手段（不局限于缩小几何尺寸）实现性能提升。</div></div>
+    <div class="gl-item"><div class="gl-term">LogicFolding（逻辑折叠）</div><div class="gl-def">华为提出的设计方法论：将数字、模拟、存储电路在设计阶段分配到垂直堆叠的多个有源层，通过混合键合连接，实现Cell-to-Cell级别的3D信号路径缩短。</div></div>
+    <div class="gl-item"><div class="gl-term">Hybrid Bonding（混合键合）</div><div class="gl-def">通过铜-铜原子直接键合实现晶圆间超细间距互连的工艺，无需底部填充胶。间距可低至1-2μm，远优于传统焊球/铜柱封装。要求极高洁净度和套刻精度。</div></div>
+    <div class="gl-item"><div class="gl-term">TSV（Through-Silicon Via，硅通孔）</div><div class="gl-def">垂直穿透硅衬底的导电通孔，用于3D堆叠结构中不同层之间的垂直电气连接。LogicFolding要求TSV关键尺寸<1.5μm，间距<6μm。</div></div>
+    <div class="gl-item"><div class="gl-term">Gear Ratio（齿轮比）</div><div class="gl-def">论文定义的关键参数：混合键合间距÷顶层金属层间距。比值越接近1，两层之间的互连密度越接近芯片内部单层布线，界面布线开销趋零。麒麟2026约为2（1.5μm/0.72μm），目标趋近1。</div></div>
+    <div class="gl-item"><div class="gl-term">Critical Path（关键路径）</div><div class="gl-def">数字电路中决定最高工作频率的信号传播路径，即从一个触发器（FF）到下一个FF之间延迟最长的路径。关键路径延迟决定了芯片的最大时钟频率。</div></div>
+    <div class="gl-item"><div class="gl-term">Clock Skew（时钟偏斜）</div><div class="gl-def">时钟信号到达不同触发器的时间差异。偏斜越大，可用的有效时序裕量（Timing Slack）越小。LogicFolding通过3D时钟树重构，实现时钟偏斜减少约25%。</div></div>
+    <div class="gl-item"><div class="gl-term">NoC（Network-on-Chip，片上网络）</div><div class="gl-def">芯片内部各功能模块间的高速通信网络。Hi-ONE技术在LogicFolding的上下层之间构建高速全局NoC，使数据路径面积减少55%，同时改善电源传递稳定性。</div></div>
+    <div class="gl-item"><div class="gl-term">UnifiedBus（统一总线）</div><div class="gl-def">华为提出的跨节点互连协议，以原生内存语义实现AI超节点内所有加速卡的统一内存寻址，消除传统PCIe/InfiniBand/NVLink等多层协议栈开销，降低跨节点通信延迟。</div></div>
+    <div class="gl-item"><div class="gl-term">Hi-ONE（光互连I/O）</div><div class="gl-def">华为提出的近封装光学I/O技术（Co-Packaged Optics，CPO的一种形态），在封装近侧集成光电转换，实现更高带宽密度和更低功耗的跨节点光互连。</div></div>
+    <div class="gl-item"><div class="gl-term">SuperPoD（超级PoD）</div><div class="gl-def">华为Atlas 960超节点架构中的大规模AI集群单元，通过UnifiedBus实现15,488张昇腾卡的统一内存寻址和协同计算，是当前规模最大的单一内存寻址AI计算集群方案之一。</div></div>
+    <div class="gl-item"><div class="gl-term">SoIC（System on Integrated Chips）</div><div class="gl-def">台积电的3D IC先进封装平台，通过直接铜-铜混合键合将不同芯片（Die）垂直堆叠，是Die-to-Die堆叠技术。用于NVIDIA AI芯片（CoWoS是其2.5D版本）和AMD服务器处理器。</div></div>
+    <div class="gl-item"><div class="gl-term">Intel Foveros / Foveros Direct</div><div class="gl-def">Intel的3D封装技术体系。Foveros通过微凸块（Micro-bump）连接，Foveros Direct实现铜-铜直接键合，间距更小，主要用于Die-to-Die级集成（如Meteor Lake处理器）。</div></div>
+    <div class="gl-item"><div class="gl-term">AMD 3D V-Cache</div><div class="gl-def">AMD将额外的SRAM Cache芯片通过混合键合堆叠在CPU计算Die之上的技术，用于服务器（EPYC Genoa X）和游戏处理器（Ryzen 7000X3D），是Die-to-Die的缓存堆叠应用。</div></div>
+    <div class="gl-item"><div class="gl-term">CoWoS（Chip-on-Wafer-on-Substrate）</div><div class="gl-def">台积电的2.5D先进封装平台，通过硅中介层（Si Interposer）将逻辑芯片与HBM等高带宽存储芯片并排集成，是AI训练芯片（NVIDIA H100/H200/B200）的标准封装方式。</div></div>
+    <div class="gl-item"><div class="gl-term">HBM（High Bandwidth Memory）</div><div class="gl-def">高带宽存储器，通过TSV垂直堆叠多层DRAM芯片，实现比传统GDDR更高的内存带宽（TB/s级别）。AI GPU（NVIDIA H100: 3.35 TB/s；H200: 4.8 TB/s）及昇腾系列均采用HBM。</div></div>
+    <div class="gl-item"><div class="gl-term">EDA（Electronic Design Automation）</div><div class="gl-def">电子设计自动化工具，覆盖芯片设计全流程（RTL综合、布局布线、仿真、验证、时序分析等）。LogicFolding需要支持3D空间联合优化的全新EDA工具链，是当前最大的软性瓶颈。</div></div>
+    <div class="gl-item"><div class="gl-term">MTr/mm²（Million Transistors per mm²）</div><div class="gl-def">晶体管面密度单位，用于衡量芯片集成度。麒麟2026：238 MTr/mm²；TSMC N3P（近似参考值）：约224 MTr/mm²；韬定律2031年目标：400+ MTr/mm²。</div></div>
+    <div class="gl-item"><div class="gl-term">DUV / EUV（光刻技术）</div><div class="gl-def">DUV（深紫外，波长193nm ArF）：现行主流光刻技术，中芯国际等可获取；EUV（极紫外，波长13.5nm，ASML独家供应）：可实现7nm以下制程，受美国出口管制对华禁售。LogicFolding在DUV节点上实现等效进步是其核心价值。</div></div>
+    <div class="gl-item"><div class="gl-term">Thermal Blanket Effect（热毯效应）</div><div class="gl-def">3D堆叠中，底层芯片被顶层芯片覆盖，散热路径延长，热阻急剧上升，导致底层芯片难以有效散热的物理现象。是LogicFolding热管理的核心挑战。</div></div>
+    <div class="gl-item"><div class="gl-term">TTV（Total Thickness Variation）</div><div class="gl-def">晶圆总厚度变化，衡量超薄晶圆磨削后的平整度。混合键合工艺要求TTV控制在5%以内，甚至绝对偏差≤0.5μm，是实现平整键合界面的关键工艺参数。</div></div>
+    <div class="gl-item"><div class="gl-term">Post-Silicon Tuning（后硅调整）</div><div class="gl-def">芯片制造完成后，在封装或测试阶段对特定参数（如时钟延迟、偏压）进行电调节的技术。麒麟2026的后硅时钟偏移调整方案独立贡献了>5%的SoC性能提升。</div></div>
+    <div class="gl-item"><div class="gl-term">Bird-cage Routing（鸟笼布线）</div><div class="gl-def">论文中描述的LogicFolding键合界面处的布线方式，指在混合键合接触点附近额外引入的绕线开销。当齿轮比趋近1时，此开销趋向消失，是衡量LogicFolding成熟度的技术指标之一。</div></div>
+    <div class="gl-item"><div class="gl-term">α（缩放因子）</div><div class="gl-def">韬定律代际公式τ_(n+1) = τ_n / α中的应用场景参数，量化每年（或每代）的τ改善速率。非摩尔定律的固定系数，因应用域不同而显著差异：移动约1.3×/年，AI工作负载可达10×/年。</div></div>
+    <div class="gl-item"><div class="gl-term">ISCAS（IEEE国际电路与系统研讨会）</div><div class="gl-def">IEEE主办的顶级学术会议（International Symposium on Circuits and Systems），是模拟/混合信号、数字电路设计领域最重要的国际学术论坛之一。2026年于上海举办，韬定律在此正式发布。</div></div>
   </div>
 </section>
 
+<!-- S13: REFERENCES -->
+<section class="section" id="s13">
+  <div class="sh"><span class="sn">参考</span><h2 class="st">参考文献与<em>主要信息来源</em></h2></div>
+  <ol class="ref-list">
+    <li>He Tingbo (何庭波), "A Time Scaling Theory for Multi-Layer Electronic Systems," ChinaXiv preprint, May 25, 2026. <a href="https://chinaxiv.org/abs/202605.00224" target="_blank">chinaxiv.org/abs/202605.00224</a></li>
+    <li>HUAWEI Official Press Release, "HUAWEI Presents the Tau (τ) Scaling Law, Enabling Breakthroughs in Transistor Density and System Performance," May 25, 2026. <a href="https://www.huawei.com/en/news/2026/5/ieee-iscas-tau-scaling" target="_blank">huawei.com</a></li>
+    <li>人民日报专访何庭波，"一直往前走，终归可以找到桥和路"，于洋、谷业凯，2026年5月27日。<a href="https://www.peopleapp.com/column/30052247440-500007515768" target="_blank">peopleapp.com</a></li>
+    <li>Leon Liao, "Huawei Unveils Tau (τ) Scaling Law: Aiming for 1.4nm-Equivalent Chip Density Within Five Years," China as a System Substack, May 2026. <a href="https://leonliao.substack.com/p/tau-scaling-law-vs-moores-law-from" target="_blank">leonliao.substack.com</a></li>
+    <li>Global Semi Research, "Huawei's Tau Scaling Law: A Technical Deep Dive Beyond the Hype," May 2026. <a href="https://globalsemiresearch.substack.com/p/huaweis-tau-scaling-law-a-technical" target="_blank">globalsemiresearch.substack.com</a></li>
+    <li>Futurum Group, "Does Huawei's Tau Scaling Law Challenge the Logic Leadership of Intel and TSMC?", May 2026. <a href="https://futurumgroup.com/insights/does-huaweis-tau-scaling-law-challenge-the-logic-leadership-of-intel-and-tsmc/" target="_blank">futurumgroup.com</a></li>
+    <li>TechWire Asia, "Huawei's Tau Scaling Law: The end of Moore's Law era?", May 2026. <a href="https://techwireasia.com/2026/05/huawei-tau-scaling-law-moores-law/" target="_blank">techwireasia.com</a></li>
+    <li>Tom's Hardware, "Huawei claims sanctions-busting breakthrough with 1.4nm-class chips by 2031, claims 55% higher transistor density," May 2026. <a href="https://www.tomshardware.com/tech-industry/semiconductors/huawei-claims-sanctions-busting-breakthrough" target="_blank">tomshardware.com</a></li>
+    <li>Tom's Hardware, "Peking University builds 3D chip design tool tailored to Huawei's LogicFolding architecture," May 2026. <a href="https://www.tomshardware.com/tech-industry/semiconductors/peking-university-builds-3d-chip-design-tool" target="_blank">tomshardware.com</a></li>
+    <li>The Register, "Huawei's chip law looks less like Moore and more like marketing," May 2026. <a href="https://www.theregister.com/systems/2026/05/26/huaweis-chip-law-looks-less-like-moore-and-more-like-marketing/" target="_blank">theregister.com</a></li>
+    <li>CGTN, "From geometry to time: Decoding Huawei's Tau (τ) Scaling Law," May 2026. <a href="https://news.cgtn.com/news/2026-05-26/From-geometry-to-time-Decoding-Huawei-s-Tau-Scaling-Law-1NstzXY8iDC/p.html" target="_blank">cgtn.com</a></li>
+    <li>CGTN, "Jensen Huang on Huawei's Tau Scaling Law: A breakthrough, but no threat to TSMC," May 30, 2026. <a href="https://news.cgtn.com/news/2026-05-30/Jensen-Huang-on-Huawei-s-Tau-Scaling-Law-No-threat-to-TSMC--1NzomLReBK8/p.html" target="_blank">cgtn.com</a></li>
+    <li>EE Times, "From Shrinking Transistors to Compressing Time: Huawei's τ Law," May 2026. <a href="https://www.eetimes.com/from-shrinking-transistors-to-compressing-time-deciphering-huaweis-%CF%84-law/" target="_blank">eetimes.com</a></li>
+    <li>新华社特稿，"'韬定律'引全球关注 中国企业勇探半导体发展新路径"，2026年5月27日。<a href="https://www.news.cn/20260527/61e64944601142aaafe0a7242873994c/c.html" target="_blank">news.cn</a></li>
+    <li>PANews, "How can Huawei break through in the high-end chip market without advanced lithography machines?", 2026. <a href="https://www.panewslab.com/en/articles/019e5dd1-b523-73ba-ab70-2118a0137c0b" target="_blank">panewslab.com</a></li>
+    <li>新浪财经，华泰证券/国盛证券/中信证券研究报告整理，"华为'韬定律'重塑半导体叙事，先进封装、代工与成熟制程迎景气度新窗口"，2026年5月26日。</li>
+    <li>新浪科技，"韬定律问世，先进封装成破局关键！长电科技能否吃透千亿市场红利？"，2026年5月27日。</li>
+    <li>《时代周报》，"华为'韬定律'刷屏背后：散热概念炒作成分大，国产EDA厂商机会来了"，2026年5月26日。</li>
+    <li>BigGo Finance, "Huawei's τ-Law Shakes Up Chip Packaging: Advanced Packaging Leaps from Supporting Role to Core Engine," May 2026. <a href="https://finance.biggo.com/news/7mSBZ54BX0tZvRTv8vz6" target="_blank">finance.biggo.com</a></li>
+    <li>SEMI Industry Report, "Global Advanced Packaging Market Forecast 2026-2031," SEMI, 2026.</li>
+    <li>Morgan Stanley, "2026 Semiconductor Report: Buy Packaging, Buy Testing, Buy Chinese Chips," referenced via PANews, May 2026.</li>
+    <li>Goldman Sachs, Upgrade of All Ring Tech and Grand Plastic Technology, April 2026, via Investing.com.</li>
+    <li>TrendForce, "NVIDIA Jensen Huang Calls Huawei's Tau Scaling Law a Breakthrough, But Sees No Challenge to TSMC," May 29, 2026. <a href="https://www.trendforce.com/news/2026/05/29/news-nvidia-jensen-huang-calls-huaweis-tau-scaling-law-a-breakthrough-but-sees-no-challenge-to-tsmc/" target="_blank">trendforce.com</a></li>
+    <li>SMIC Q1 2026 Earnings Release, May 14, 2026, via StockAnalysis.</li>
+    <li>Moore, Gordon E., "Cramming more components onto integrated circuits," Electronics, Vol. 38, No. 8, April 19, 1965.</li>
+    <li>Dennard, Robert H. et al., "Design of ion-implanted MOSFET's with very small physical dimensions," IEEE JSSC, Vol. 9, No. 5, October 1974.</li>
+  </ol>
+</section>
+
 </div><!-- /pw -->
+
+<footer class="footer">
+  <div>
+    <strong style="color:rgba(255,255,255,.65)">华为韬（τ）定律 · 深度知识库 v2.0</strong><br>
+    主参考：<a href="https://www.huawei.com/en/news/2026/5/ieee-iscas-tau-scaling">华为官方发布</a> · <a href="https://chinaxiv.org/abs/202605.00224">ChinaXiv论文</a> · <a href="https://www.peopleapp.com/column/30052247440-500007515768">人民日报专访</a> · IEEE ISCAS 2026 · 多源国际媒体及金融机构报告<br>
+    本知识库以"只阐述，不激变"为原则，所有数据来自可核查的公开一手或权威二手来源，财务模型为结构性估算，不构成投资建议。<br>
+    <span style="opacity:.35;font-size:10.5px;">编制日期：2026年6月 · 支持文字编辑功能 · 点击右上角"编辑模式"按钮</span>
+  </div>
+</footer>
+
+<script>
+let editMode=false,savedData={},editableEls=[];
+function loadSaved(){try{const d=sessionStorage.getItem('tau_v2_edits');if(d){savedData=JSON.parse(d);applyEdits();}}catch(e){}}
+function applyEdits(){Object.keys(savedData).forEach(id=>{const el=document.querySelector(`[data-eid="${id}"]`);if(el)el.innerHTML=savedData[id];});}
+function toggleEditMode(){
+  editMode=!editMode;
+  const tb=document.getElementById('edit-toolbar'),btn=document.getElementById('edit-toggle-btn');
+  if(editMode){makeEditable();tb.classList.add('visible');btn.classList.add('active');btn.innerHTML='<span class="dot"></span>退出编辑';document.body.classList.add('edit-mode');showToast('✏️ 编辑模式开启 — 点击任意文字即可修改');}
+  else{disableEditable();tb.classList.remove('visible');btn.classList.remove('active');btn.innerHTML='<span class="dot"></span>编辑模式';document.body.classList.remove('edit-mode');showToast('✓ 已退出编辑模式');}
+}
+function makeEditable(){
+  const sels=['p','h1','h2','h3','h4','blockquote','cite','.hero-badge','.sub','.card h3','.card p','.tl-title','.tl-desc','.tl-year','.mb .l','.rm-ph h4','.rm-ph ul li','.ri h4','.ri p','.ri .mt p','.st','.peer-item blockquote','.peer-item .analysis','.media-card p','td','th','.an-box p','.ft td','.gl-def','.gl-term','.sc-content h4','.sc-content p','.thermal-box p','.prose p','.fd'];
+  editableEls=[];
+  sels.forEach(sel=>{document.querySelectorAll(sel).forEach((el,i)=>{if(!el.closest('#edit-toolbar')&&!el.closest('#edit-toggle-btn')&&!el.closest('#toast')){if(!el.dataset.eid)el.dataset.eid=`e_${sel.replace(/[^a-z0-9]/g,'_')}_${i}`;el.setAttribute('contenteditable','true');el.classList.add('bk');editableEls.push(el);}});});
+}
+function disableEditable(){editableEls.forEach(el=>{el.removeAttribute('contenteditable');el.classList.remove('bk');});}
+function saveContent(){
+  editableEls.forEach(el=>{if(el.dataset.eid)savedData[el.dataset.eid]=el.innerHTML;});
+  try{sessionStorage.setItem('tau_v2_edits',JSON.stringify(savedData));showToast('💾 已保存到本地会话！');}catch(e){showToast('⚠️ 保存失败，请导出HTML');}
+}
+function exportHTML(){
+  const wasEditing=editMode;
+  if(wasEditing){disableEditable();document.body.classList.remove('edit-mode');document.getElementById('edit-toolbar').classList.remove('visible');}
+  const clone=document.documentElement.cloneNode(true);
+  ['edit-toolbar','edit-toggle-btn','toast'].forEach(id=>{const el=clone.querySelector('#'+id);if(el)el.remove();});
+  clone.querySelectorAll('[contenteditable]').forEach(el=>{el.removeAttribute('contenteditable');el.classList.remove('bk');});
+  const html='<!DOCTYPE html>\n'+clone.outerHTML;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`huawei_tau_law_${new Date().toISOString().slice(0,10)}.html`;a.click();URL.revokeObjectURL(url);
+  if(wasEditing){makeEditable();document.body.classList.add('edit-mode');document.getElementById('edit-toolbar').classList.add('visible');}
+  showToast('⬇ HTML已导出，包含全部修改内容');
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+// Nav active state
+const sections=document.querySelectorAll('.section');
+const navLinks=document.querySelectorAll('.toc-list a');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const id=e.target.id;navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));}});},{threshold:0.25,rootMargin:'-55px 0px -40% 0px'});
+sections.forEach(s=>obs.observe(s));
+
+// Hero numbers animation
+function animNums(){document.querySelectorAll('.hero-stat .num').forEach(el=>{const txt=el.innerHTML;const m=txt.match(/^([<≈]?)([\d.]+)/);if(!m)return;const pref=m[1],target=parseFloat(m[2]),dec=(m[2].split('.')[1]||'').length,suf=txt.slice(m[0].length);let start=0,step=target/60;const t=setInterval(()=>{start=Math.min(start+step,target);el.innerHTML=pref+start.toFixed(dec)+suf;if(start>=target)clearInterval(t);},16);});}
+setTimeout(animNums,400);
+
+loadSaved();
+</script>
+</body>
+</html>
